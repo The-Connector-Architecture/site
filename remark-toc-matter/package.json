@@ -1,0 +1,35 @@
+{
+  "name": "remark-toc-matter",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Add metadata about a Markdown file as Front Matter.",
+  "license": "MIT",
+  "keywords": [
+    "remark",
+    "front-matter",
+    "remark-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:temando/remark-metadata.git"
+  },
+  "dependencies": {
+    "mdast-util-toc": "^6.1.1",
+    "remark-frontmatter": "^1.1.0"
+  },
+  "devDependencies": {
+    "remark-parse": "^4.0.0",
+    "remark-stringify": "^4.0.0",
+    "to-vfile": "^2.1.2",
+    "unified": "^6.1.5",
+    "vfile": "^2.2.0"
+  },
+  "scripts": {
+    "preversion": "npm run lint && npm run test",
+    "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ]
+}

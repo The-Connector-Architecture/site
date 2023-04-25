@@ -1,0 +1,14 @@
+ol {
+  counter-reset: item;
+}
+
+/* Display all list items in a numbered list in block display */
+ol > li {
+  display: block;
+}
+
+/* Use a counter that checks the number of items and adds a "." between them and ends with ". " */
+ol > li:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+}
