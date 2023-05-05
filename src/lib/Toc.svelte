@@ -22,7 +22,7 @@
 {#if ty === "text"}
   {text}
 {:else if ty === "link"}
-  <a href={b}{base + url}> <TocList toc={parentToc} {base} {newCounter} /> </a>
+  <a href={b + base + url}> <TocList toc={parentToc} {base} {newCounter} /> </a>
 {:else if ty === "listItem"}
   <li>
     <TocList toc={parentToc} {base} {newCounter} />

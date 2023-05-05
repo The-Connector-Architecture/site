@@ -11,10 +11,12 @@
   import { onMount } from "svelte";
   let topAppBar: TopAppBar;
 
-  import { base } from "$app/paths";
-  import "$lib/prism.js";
+  import "$lib/static/prism/prism.css"
+  import "$lib/static/prism/prism.js"
+  import "$lib/static/smui.css";
   import mermaid from "mermaid";
   import { page } from "$app/stores";
+  import { base } from "$app/paths";
   mermaid.initialize({ startOnLoad: false });
 
   let loaded = false;
@@ -37,17 +39,6 @@
     href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="{base}/prism/prism.css" data-noprefix />
-  <link
-    rel="stylesheet"
-    href="{base}/smui.css"
-    media="(prefers-color-scheme: light)"
-  />
-  <link
-    rel="stylesheet"
-    href="{base}/smui-dark.css"
-    media="screen and (prefers-color-scheme: dark)"
-  />
 </svelte:head>
 
 <TopAppBar bind:this={topAppBar} variant="fixed">
@@ -58,8 +49,8 @@
       >
     </Section>
     <Section align="start" toolbar>
-      <Button on:click={() => goto("/docs/1_Home")}><Label>Docs</Label></Button>
-      <Button on:click={() => goto("/about")}><Label>About</Label></Button>
+      <Button on:click={() => goto(base+"/docs/1_Home")}><Label>Docs</Label></Button>
+      <Button on:click={() => goto(base+"/about")}><Label>About</Label></Button>
     </Section>
   </Row>
 </TopAppBar>
