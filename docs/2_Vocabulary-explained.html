@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		<meta http-equiv="content-security-policy" content="">
+		<link href="../_app/immutable/assets/_layout.0de44759.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/_layout.ce5ab797.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/Toc.68383aa0.css" rel="stylesheet">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.39e866dd.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index.f02f8fef.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.5b8cbb60.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/control.e7f5239e.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.25670fb4.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.41c905a7.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/_layout.svelte.94a37de6.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.3097801f.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Button.b4c2774d.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.707fd966.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/_layout.ts.07c04cf2.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.025914ab.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-layout.svelte.3f6abf0d.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Toc.6f9dfaf7.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.svelte.df34df81.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.ts.6f5bae14.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/_page.5901c241.js"><title>Connector Architecture</title><!-- HEAD_svelte-1sa6q26_START --><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><link rel="stylesheet" href="/prism/prism.css" data-noprefix><link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)"><link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)"><!-- HEAD_svelte-1sa6q26_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+
+
+
+
+
+
+<header class="mdc-top-app-bar mdc-top-app-bar--fixed" style=""><div class="mdc-top-app-bar__row"><section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"><span class="mdc-top-app-bar__title" style="cursor: pointer;">Connector Architecture</span>
+</section>
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" role="toolbar"><button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+  <span class="mdc-button__label">Docs</span></button>
+      <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+  <span class="mdc-button__label">About</span></button>
+</section></div>
+</header>
+
+<main class=""><div class="main svelte-xt2xha">
+
+<div><aside class="mdc-drawer mdc-drawer--dismissible" style="width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"><div class="mdc-drawer__header" style="position: relative;"><h1 class="mdc-drawer__title">Table of Centents</h1>
+      <div class="margins" style="transform: translateY(-50%); position: absolute; top: 50%; right: 8px; border-radius: 50%;"><button class="material-icons mdc-icon-button mdc-icon-button--touch mdc-icon-button--display-flex" style=""><div class="mdc-icon-button__ripple"></div>
+  close<div class="mdc-icon-button__touch"></div></button></div></div>
+    <div class="mdc-drawer__content"><ol style="counter-reset: item 0 ;"><li><a href="/docs/1_Home#welcome-to-the-connector-architecture">Welcome to the connector architecture</a><ol style=""><li><a href="/docs/1_Home#what-is-the-connector-architecture">What is the connector architecture?</a></li><li><a href="/docs/1_Home#small-high-level-example">Small high-level example</a></li></ol></li></ol><ol style="counter-reset: item 1 ;"><li><a href="/docs/2_Vocabulary-explained#vocabulary-overview">Vocabulary overview</a><ol style=""><li><a href="/docs/2_Vocabulary-explained#processor">Processor</a></li><li><a href="/docs/2_Vocabulary-explained#channel">Channel</a></li><li><a href="/docs/2_Vocabulary-explained#connector">Connector</a></li><li><a href="/docs/2_Vocabulary-explained#runner">Runner</a></li><li><a href="/docs/2_Vocabulary-explained#pipeline">Pipeline</a></li></ol></li></ol><ol style="counter-reset: item 2 ;"><li><a href="/docs/3_Channels#intro-to-channels">Intro to channels</a><ol style=""><li><a href="/docs/3_Channels#example-http-channel">Example http-channel</a></li></ol></li></ol><ol style="counter-reset: item 3 ;"><li><a href="/docs/4_Processor#intro-to-the-processor">Intro to the processor</a></li></ol><ol style="counter-reset: item 4 ;"><li><a href="/docs/5_Runner#intro-to-runners">Intro to runners</a><ol style=""><li><a href="/docs/5_Runner#example-js-runner">Example js-runner</a></li></ol></li></ol><ol style="counter-reset: item 5 ;"><li><a href="/docs/6_Pipeline#intro-to-the-pipeline">Intro to the pipeline</a><ol style=""><li><a href="/docs/6_Pipeline#test-header">Test header</a></li></ol></li></ol><ol style="counter-reset: item 6 ;"><li><a href="/docs/7_Why#why-is-configure-everything-in-linked-data">Why is configure everything in linked data?</a></li></ol></div>
+</aside>
+
+  <button class="mdc-button" style=""><div class="mdc-button__ripple"></div>
+  <span class="mdc-button__label">Toggle navigation bar</span></button>
+
+  <div style="margin-left: 0px" class="margined svelte-16xqc4o">
+
+
+<article class="post"><h1 id="vocabulary-overview"><a aria-hidden="true" tabindex="-1" href="#vocabulary-overview"><span class="icon icon-link"></span></a>Vocabulary overview</h1>
+<p>The connector architecture exists of multiple components.</p>
+<h2 id="processor"><a aria-hidden="true" tabindex="-1" href="#processor"><span class="icon icon-link"></span></a>Processor</h2>
+<p>A processor is a step inside a pipeline, often a data transformation. It can literally be anything, but in the connector architecture, a processor is usually a stream processor, transforming incoming data.
+A processor is programming language independent and runtime independent, as long as a matching runner exists. </p>
+<h2 id="channel"><a aria-hidden="true" tabindex="-1" href="#channel"><span class="icon icon-link"></span></a>Channel</h2>
+<p>A channel is the link between two processors that carries data. It can be anything and consists of a <code>reader</code> and a <code>writer</code> part.</p>
+<h2 id="connector"><a aria-hidden="true" tabindex="-1" href="#connector"><span class="icon icon-link"></span></a>Connector</h2>
+<p>A connector is a piece of code that communicates with a channel for a specific runner.</p>
+<h2 id="runner"><a aria-hidden="true" tabindex="-1" href="#runner"><span class="icon icon-link"></span></a>Runner</h2>
+<p>A runner is a piece of code that combines the abstract pipeline configuration and the actual processors that should be ran. It is programming language dependent because the runner is the bridge between the program and the pipeline idea.</p>
+<p>Some runners can do a lot of heavy lifting, like already instantiating the channels before starting the processors.</p>
+<h2 id="pipeline"><a aria-hidden="true" tabindex="-1" href="#pipeline"><span class="icon icon-link"></span></a>Pipeline</h2>
+<p>A pipeline is the total picture, the total data transformation happening. It can consist of multiple steps that link together. It does not have to be an easy left-to-right flow. Cycles and aggregations and everything in between are also supported.</p></article></div>
+</div></div></main>
+
+
+			
+			<script>
+				{
+					__sveltekit_5ak7dp = {
+						base: new URL("..", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,{"type":"data","data":{posts:[{title:"Welcome",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#welcome-to-the-connector-architecture",children:[{type:"text",value:"Welcome to the connector architecture"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#what-is-the-connector-architecture",children:[{type:"text",value:"What is the connector architecture?"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#small-high-level-example",children:[{type:"text",value:"Small high-level example"}]}]}]}]}]}]}},slug:"1_Home"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#vocabulary-overview",children:[{type:"text",value:"Vocabulary overview"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#processor",children:[{type:"text",value:"Processor"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#channel",children:[{type:"text",value:"Channel"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#connector",children:[{type:"text",value:"Connector"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#runner",children:[{type:"text",value:"Runner"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#pipeline",children:[{type:"text",value:"Pipeline"}]}]}]}]}]}]}},slug:"2_Vocabulary-explained"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-channels",children:[{type:"text",value:"Intro to channels"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-http-channel",children:[{type:"text",value:"Example http-channel"}]}]}]}]}]}]}},slug:"3_Channels"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-processor",children:[{type:"text",value:"Intro to the processor"}]}]}]}]}},slug:"4_Processor"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-runners",children:[{type:"text",value:"Intro to runners"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-js-runner",children:[{type:"text",value:"Example js-runner"}]}]}]}]}]}]}},slug:"5_Runner"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-pipeline",children:[{type:"text",value:"Intro to the pipeline"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#test-header",children:[{type:"text",value:"Test header"}]}]}]}]}]}]}},slug:"6_Pipeline"},{title:"Why is this a title",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#why-is-configure-everything-in-linked-data",children:[{type:"text",value:"Why is configure everything in linked data?"}]}]}]}]}},slug:"7_Why"}]},"uses":{}},null];
+
+					Promise.all([
+						import("../_app/immutable/entry/start.39e866dd.js"),
+						import("../_app/immutable/entry/app.25670fb4.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 6],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
