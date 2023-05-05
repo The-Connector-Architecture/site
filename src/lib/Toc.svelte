@@ -3,6 +3,7 @@
   import type { Counter } from "$lib/util";
   import TocList from "./TocList.svelte";
   import "./toc.css";
+  import { base as b } from "$app/paths";
   export let toc: Parent | Link | Text;
   export let base: string;
   export let counter: Counter;
@@ -21,7 +22,7 @@
 {#if ty === "text"}
   {text}
 {:else if ty === "link"}
-  <a href={base + url}> <TocList toc={parentToc} {base} {newCounter} /> </a>
+  <a href={b}{base + url}> <TocList toc={parentToc} {base} {newCounter} /> </a>
 {:else if ty === "listItem"}
   <li>
     <TocList toc={parentToc} {base} {newCounter} />

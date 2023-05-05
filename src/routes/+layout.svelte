@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   let topAppBar: TopAppBar;
 
+  import { base } from "$app/paths";
   import "$lib/prism.js";
   import mermaid from "mermaid";
   import { page } from "$app/stores";
@@ -36,15 +37,15 @@
     href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="/prism/prism.css" data-noprefix />
+  <link rel="stylesheet" href="{base}/prism/prism.css" data-noprefix />
   <link
     rel="stylesheet"
-    href="/smui.css"
+    href="{base}/smui.css"
     media="(prefers-color-scheme: light)"
   />
   <link
     rel="stylesheet"
-    href="/smui-dark.css"
+    href="{base}/smui-dark.css"
     media="screen and (prefers-color-scheme: dark)"
   />
 </svelte:head>
