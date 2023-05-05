@@ -5,8 +5,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
-		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
-		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark",
+		"smui-theme-light": "npx smui-theme compile static/smui.css -i src/theme",
+		"smui-theme-dark": "npx smui-theme compile static/smui-dark.css -i src/theme/dark",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
