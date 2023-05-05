@@ -22,7 +22,7 @@ The connector architecture makes the pipeline possible, by defining, `runners`. 
 
 The two processors communicate over a channel. This is a technology that both runners understand. Easy examples are websockets or TCP streams.
 
-```mermaid
+```
 flowchart LR
     subgraph runner-1
       w{{writer}}

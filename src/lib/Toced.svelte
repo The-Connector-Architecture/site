@@ -22,7 +22,7 @@
 
   $: small = width < 1200;
   $: open = openState !== undefined ? openState : !small;
-  $: margin = open && small ? 500 : 0;
+  $: margin = open && small ? 480 : 0;
 </script>
 
 <svelte:window bind:innerWidth={width} />
@@ -31,7 +31,7 @@
   <Drawer
     variant="dismissible"
     bind:open
-    style="width: 500px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"
+    style="width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"
   >
     <Header style="position: relative;">
       <DTitle>Table of Centents</DTitle>

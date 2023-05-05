@@ -8,16 +8,26 @@
   } from "@smui/top-app-bar";
   import Button, { Label } from "@smui/button";
   import "./root.css";
-
-  import Drawer, {
-    Content,
-    Header,
-    Title as DTitle,
-    Subtitle,
-  } from "@smui/drawer";
-
+  import { onMount } from "svelte";
   let topAppBar: TopAppBar;
-  let open = true;
+
+  import "$lib/prism.js";
+  import mermaid from "mermaid";
+  import { page } from "$app/stores";
+  mermaid.initialize({ startOnLoad: false });
+
+  let loaded = false;
+  onMount(() => {
+    loaded = true;
+    console.log("Onmount!");
+    mermaid.init(undefined, "code.language-undefined");
+  });
+
+  page.subscribe(() => {
+    if (loaded) {
+      mermaid.run({ querySelector: "code.language-undefined" });
+    }
+  });
 </script>
 
 <svelte:head>
@@ -26,6 +36,7 @@
     href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet"
   />
+  <link rel="stylesheet" href="/prism/prism.css" data-noprefix />
   <link
     rel="stylesheet"
     href="/smui.css"
@@ -38,7 +49,6 @@
   />
 </svelte:head>
 
-
 <TopAppBar bind:this={topAppBar} variant="fixed">
   <Row>
     <Section>
@@ -47,7 +57,7 @@
       >
     </Section>
     <Section align="start" toolbar>
-      <Button on:click={() => goto("/docs")}><Label>Docs</Label></Button>
+      <Button on:click={() => goto("/docs/1_Home")}><Label>Docs</Label></Button>
       <Button on:click={() => goto("/about")}><Label>About</Label></Button>
     </Section>
   </Row>
@@ -61,8 +71,9 @@
 
 <style>
   .main {
+    position: relative;
     max-width: 1400px;
-    width: 80%;
+    width: calc(100% - 1000px);
     min-width: 800px;
     margin: auto;
   }

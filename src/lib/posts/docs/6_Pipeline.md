@@ -64,7 +64,8 @@ js:Resc a js:JsProcess;
 Note: that the three processors are defined in the same source file, but this does not actually matter.
 
 Now comes the fun stuff, configuring the pipeline. We will create a memory channel that links the send processor to the echo processor, then a HTTP channel to the resc processor.
-```mermaid
+
+```
 flowchart LR
 subgraph js-runner
   subgraph send-proc
@@ -121,7 +122,7 @@ end
 ```
 
 Executing this pipeline would be as easy as running:
-```
+```shell
 js-runner pipeline.ttl -o processors/*.ttl
 ```
 
