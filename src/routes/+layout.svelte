@@ -9,7 +9,15 @@
   import Button, { Label } from "@smui/button";
   import "./root.css";
 
+  import Drawer, {
+    Content,
+    Header,
+    Title as DTitle,
+    Subtitle,
+  } from "@smui/drawer";
+
   let topAppBar: TopAppBar;
+  let open = true;
 </script>
 
 <svelte:head>
@@ -30,10 +38,13 @@
   />
 </svelte:head>
 
-<TopAppBar bind:this={topAppBar} variant="standard">
+
+<TopAppBar bind:this={topAppBar} variant="fixed">
   <Row>
     <Section>
-      <Title on:click={() => goto("/")} style="cursor: pointer;">Connector Architecture</Title>
+      <Title on:click={() => goto("/")} style="cursor: pointer;"
+        >Connector Architecture</Title
+      >
     </Section>
     <Section align="start" toolbar>
       <Button on:click={() => goto("/docs")}><Label>Docs</Label></Button>
@@ -43,5 +54,16 @@
 </TopAppBar>
 
 <AutoAdjust {topAppBar}>
-  <slot />
+  <div class="main">
+    <slot />
+  </div>
 </AutoAdjust>
+
+<style>
+  .main {
+    max-width: 1400px;
+    width: 80%;
+    min-width: 800px;
+    margin: auto;
+  }
+</style>
