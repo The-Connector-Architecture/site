@@ -44,7 +44,7 @@
 <TopAppBar bind:this={topAppBar} variant="fixed">
   <Row>
     <Section>
-      <Title on:click={() => goto("/")} style="cursor: pointer;"
+      <Title on:click={() => goto(base + "/")} style="cursor: pointer;"
         >Connector Architecture</Title
       >
     </Section>
