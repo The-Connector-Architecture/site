@@ -36,6 +36,7 @@
 		"eslint-plugin-svelte3": "^4.0.0",
 		"mdsvex": "^0.10.6",
 		"mermaid": "^10.1.0",
+		"n3": "^1.16.4",
 		"rehype-autolink-headings": "^6.1.1",
 		"rehype-slug": "^5.1.0",
 		"remark-containers": "^1.2.0",

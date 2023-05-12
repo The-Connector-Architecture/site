@@ -22,7 +22,6 @@
   let loaded = false;
   onMount(() => {
     loaded = true;
-    console.log("Onmount!");
     mermaid.init(undefined, "code.language-undefined");
   });
 
