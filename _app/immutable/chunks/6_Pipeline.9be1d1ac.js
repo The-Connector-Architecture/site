@@ -1,71 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="../favicon.png" />
-		<meta name="viewport" content="width=device-width" />
-		<meta http-equiv="content-security-policy" content="">
-		<link href="../_app/immutable/assets/_layout.1098640d.css" rel="stylesheet">
-		<link href="../_app/immutable/assets/_layout.90978cdb.css" rel="stylesheet">
-		<link href="../_app/immutable/assets/Toc.68383aa0.css" rel="stylesheet">
-		<link rel="modulepreload" href="../_app/immutable/entry/start.c5ee4364.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/index.4fabcb1b.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.d89a9b0a.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/paths.32c4b053.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/control.e7f5239e.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/app.503bc905.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.41c905a7.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/_layout.svelte.c77d5041.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.51f19a9c.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/Button.c58dda85.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/stores.d26b9751.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/_layout.ts.07c04cf2.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.025914ab.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-layout.svelte.9e026fd6.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/Toc.6cd961da.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.svelte.fbbece45.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.ts.c5758d5a.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/_page.845d5e6f.js"><title>Connector Architecture</title><!-- HEAD_svelte-1ffb0ko_START --><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!-- HEAD_svelte-1ffb0ko_END -->
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">
-
-
-
-
-
-
-<header class="mdc-top-app-bar mdc-top-app-bar--fixed" style=""><div class="mdc-top-app-bar__row"><section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"><span class="mdc-top-app-bar__title" style="cursor: pointer;">Connector Architecture</span>
-</section>
-    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" role="toolbar"><button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
-  <span class="mdc-button__label">Docs</span></button>
-      <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
-  <span class="mdc-button__label">Getting Started</span></button>
-      <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
-  <span class="mdc-button__label">Components</span></button>
-</section></div>
-</header>
-
-<main class=""><div class="main svelte-xq0zsc">
-
-<div><aside class="mdc-drawer mdc-drawer--dismissible" style="max-width: 100%; width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"><div class="mdc-drawer__header" style="position: relative;"><h1 class="mdc-drawer__title">Table of Centents</h1>
-      <div class="margins" style="transform: translateY(-50%); position: absolute; top: 50%; right: 8px; border-radius: 50%;"><button class="material-icons mdc-icon-button mdc-icon-button--touch mdc-icon-button--display-flex" style=""><div class="mdc-icon-button__ripple"></div>
-  close<div class="mdc-icon-button__touch"></div></button></div></div>
-    <div class="mdc-drawer__content"><ol style="counter-reset: item 0 ;"><li><a href="/site/docs/1_Home#welcome-to-the-connector-architecture">Welcome to the connector architecture</a><ol style=""><li><a href="/site/docs/1_Home#what-is-the-connector-architecture">What is the connector architecture?</a></li><li><a href="/site/docs/1_Home#small-high-level-example">Small high-level example</a></li></ol></li></ol><ol style="counter-reset: item 1 ;"><li><a href="/site/docs/2_Vocabulary-explained#vocabulary-overview">Vocabulary overview</a><ol style=""><li><a href="/site/docs/2_Vocabulary-explained#processor">Processor</a></li><li><a href="/site/docs/2_Vocabulary-explained#channel">Channel</a></li><li><a href="/site/docs/2_Vocabulary-explained#connector">Connector</a></li><li><a href="/site/docs/2_Vocabulary-explained#runner">Runner</a></li><li><a href="/site/docs/2_Vocabulary-explained#pipeline">Pipeline</a></li></ol></li></ol><ol style="counter-reset: item 2 ;"><li><a href="/site/docs/3_Channels#intro-to-channels">Intro to channels</a><ol style=""><li><a href="/site/docs/3_Channels#example-http-channel">Example http-channel</a></li></ol></li></ol><ol style="counter-reset: item 3 ;"><li><a href="/site/docs/4_Processor#intro-to-the-processor">Intro to the processor</a></li></ol><ol style="counter-reset: item 4 ;"><li><a href="/site/docs/5_Runner#intro-to-runners">Intro to runners</a><ol style=""><li><a href="/site/docs/5_Runner#example-js-runner">Example js-runner</a></li></ol></li></ol><ol style="counter-reset: item 5 ;"><li><a href="/site/docs/6_Pipeline#intro-to-the-pipeline">Intro to the pipeline</a><ol style=""><li><a href="/site/docs/6_Pipeline#test-header">Test header</a></li></ol></li></ol><ol style="counter-reset: item 6 ;"><li><a href="/site/docs/7_Why#why-is-configure-everything-in-linked-data">Why is configure everything in linked data?</a></li></ol></div>
-</aside>
-
-  <button class="mdc-button" style=""><div class="mdc-button__ripple"></div>
-  <span class="mdc-button__label">Toggle navigation bar</span></button>
-
-  <div style="padding-left: 2em" class="margined container svelte-1pek3qu">
-
-
-<article class="post"><h1 id="intro-to-the-pipeline"><a aria-hidden="true" tabindex="-1" href="#intro-to-the-pipeline"><span class="icon icon-link"></span></a>Intro to the pipeline</h1>
-<p>The pipeline is the actual goal of the connector architecture. Connect processors of any kind together with channels and resolve the two language problem. </p>
-<p>Every part of information will come together in the following example. We defined a js-runner in the <a href="https://github.com/TREEcg/connector-architecture/wiki/Runner" rel="nofollow">runner</a> section and a HTTP channel in the <a href="https://github.com/TREEcg/connector-architecture/wiki/Channel" rel="nofollow">channel</a>. Next we need to define some processors that will be part of this pipeline. Note that many processors can already be found in this github repo.</p>
-<p>We define:</p>
-<p><strong>Send</strong>: A js process that periodically sends a message to a channel writer.</p>
-<pre class="language-turtle"><!-- HTML_TAG_START --><code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Send</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
+import{S as Yn,i as Zn,s as $n,k as e,q as i,a as k,l as o,m as c,h as s,r as u,c as r,n as l,b as p,X as t,U as vn}from"./index.4fabcb1b.js";function ns(Jn){let f,h,S,an,O,M,pn,q,m,tn,w,en,on,j,cn,ln,U,H,un,X,y,L,kn,rn,z,P,Gn=`<code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Send</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">file</span></span> <span class="token string">"./test.js"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">function</span></span> <span class="token string">"send"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">location</span></span> <span class="token url"><span class="token punctuation">&lt;</span>./<span class="token punctuation">></span></span><span class="token punctuation">;</span>
@@ -80,9 +13,7 @@
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">functionParameter</span></span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">sendWriter</span></span> <span class="token punctuation">;</span>
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">implementationParameterPosition</span></span> <span class="token string">"1"</span><span class="token punctuation">^^</span><span class="token function"><span class="token prefix">xsd<span class="token punctuation">:</span></span><span class="token local-name">int</span></span>
     <span class="token punctuation">]</span>
-  <span class="token punctuation">]</span><span class="token punctuation">.</span></code><!-- HTML_TAG_END --></pre>
-<p><strong>Echo</strong>: A js process that echo’s all messages from a reader to a writer</p>
-<pre class="language-turtle"><!-- HTML_TAG_START --><code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Echo</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">]</span><span class="token punctuation">.</span></code>`,B,E,I,fn,mn,D,g,On=`<code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Echo</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">file</span></span> <span class="token string">"./echo.js"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">function</span></span> <span class="token string">"echo"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">location</span></span> <span class="token url"><span class="token punctuation">&lt;</span>./<span class="token punctuation">></span></span><span class="token punctuation">;</span>
@@ -97,9 +28,7 @@
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">functionParameter</span></span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">output</span></span> <span class="token punctuation">;</span>
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">implementationParameterPosition</span></span> <span class="token string">"1"</span><span class="token punctuation">^^</span><span class="token function"><span class="token prefix">xsd<span class="token punctuation">:</span></span><span class="token local-name">int</span></span>
     <span class="token punctuation">]</span>
-  <span class="token punctuation">]</span><span class="token punctuation">.</span></code><!-- HTML_TAG_END --></pre>
-<p><strong>Resc</strong>: A js processor that prints all messages from a reader to stdout</p>
-<pre class="language-turtle"><!-- HTML_TAG_START --><code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Resc</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">]</span><span class="token punctuation">.</span></code>`,F,_,J,hn,dn,K,v,qn=`<code class="language-turtle"><span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Resc</span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">JsProcess</span></span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">file</span></span> <span class="token string">"./test.js"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">function</span></span> <span class="token string">"resc"</span><span class="token punctuation">;</span>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">location</span></span> <span class="token url"><span class="token punctuation">&lt;</span>./<span class="token punctuation">></span></span><span class="token punctuation">;</span>
@@ -110,10 +39,7 @@
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">functionParameter</span></span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">rescReader</span></span> <span class="token punctuation">;</span>
       <span class="token function"><span class="token prefix">fnom<span class="token punctuation">:</span></span><span class="token local-name">implementationParameterPosition</span></span> <span class="token string">"0"</span><span class="token punctuation">^^</span><span class="token function"><span class="token prefix">xsd<span class="token punctuation">:</span></span><span class="token local-name">int</span></span>
     <span class="token punctuation">]</span>
-  <span class="token punctuation">]</span><span class="token punctuation">.</span></code><!-- HTML_TAG_END --></pre>
-<p>Note: that the three processors are defined in the same source file, but this does not actually matter.</p>
-<p>Now comes the fun stuff, configuring the pipeline. We will create a memory channel that links the send processor to the echo processor, then a HTTP channel to the resc processor.</p>
-<pre class="language-undefined"><!-- HTML_TAG_START --><code class="language-undefined">flowchart LR
+  <span class="token punctuation">]</span><span class="token punctuation">.</span></code>`,Q,W,xn,V,N,wn,Y,b,Un=`<code class="language-undefined">flowchart LR
 subgraph js-runner
   subgraph send-proc
     w1&#123;&#123;writer&#125;&#125;
@@ -130,8 +56,7 @@ subgraph js-runner
   end
   w1--memory-channel--&gt;r1
   w2--http-channel--&gt;r2
-end</code><!-- HTML_TAG_END --></pre>
-<pre class="language-turtle"><!-- HTML_TAG_START --><code class="language-turtle"><span class="token keyword">@prefix</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span></span> <span class="token url"><span class="token punctuation">&lt;</span>https://w3id.org/conn/js#<span class="token punctuation">></span></span> <span class="token punctuation">.</span>
+end</code>`,Z,R,Xn=`<code class="language-turtle"><span class="token keyword">@prefix</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span></span> <span class="token url"><span class="token punctuation">&lt;</span>https://w3id.org/conn/js#<span class="token punctuation">></span></span> <span class="token punctuation">.</span>
 <span class="token keyword">@prefix</span> <span class="token function"><span class="token prefix">ws<span class="token punctuation">:</span></span></span> <span class="token url"><span class="token punctuation">&lt;</span>https://w3id.org/conn/ws#<span class="token punctuation">></span></span> <span class="token punctuation">.</span>
 <span class="token keyword">@prefix</span> <span class="token function"><span class="token prefix"><span class="token punctuation">:</span></span></span> <span class="token url"><span class="token punctuation">&lt;</span>https://w3id.org/conn#<span class="token punctuation">></span></span> <span class="token punctuation">.</span>
 
@@ -162,39 +87,4 @@ end</code><!-- HTML_TAG_END --></pre>
   <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">output</span></span> <span class="token url"><span class="token punctuation">&lt;</span>httpWriter<span class="token punctuation">></span></span><span class="token punctuation">.</span>
 
 <span class="token url"><span class="token punctuation">&lt;</span>resc-proc<span class="token punctuation">></span></span> <span class="token keyword">a</span> <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">Resc</span></span><span class="token punctuation">;</span>
-  <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">rescReader</span></span> <span class="token url"><span class="token punctuation">&lt;</span>httpReader<span class="token punctuation">></span></span><span class="token punctuation">.</span></code><!-- HTML_TAG_END --></pre>
-<p>Executing this pipeline would be as easy as running:</p>
-<pre class="language-shell"><!-- HTML_TAG_START --><code class="language-shell">js-runner pipeline.ttl <span class="token parameter variable">-o</span> processors/*.ttl</code><!-- HTML_TAG_END --></pre>
-<h2 id="test-header"><a aria-hidden="true" tabindex="-1" href="#test-header"><span class="icon icon-link"></span></a>Test header</h2></article></div>
-</div></div></main>
-
-
-			
-			<script>
-				{
-					__sveltekit_tsin5r = {
-						assets: "/site",
-						base: new URL("..", location).pathname.slice(0, -1),
-						env: {}
-					};
-
-					const element = document.currentScript.parentElement;
-
-					const data = [null,{"type":"data","data":{posts:[{title:"Welcome",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#welcome-to-the-connector-architecture",children:[{type:"text",value:"Welcome to the connector architecture"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#what-is-the-connector-architecture",children:[{type:"text",value:"What is the connector architecture?"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#small-high-level-example",children:[{type:"text",value:"Small high-level example"}]}]}]}]}]}]}},slug:"1_Home"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#vocabulary-overview",children:[{type:"text",value:"Vocabulary overview"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#processor",children:[{type:"text",value:"Processor"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#channel",children:[{type:"text",value:"Channel"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#connector",children:[{type:"text",value:"Connector"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#runner",children:[{type:"text",value:"Runner"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#pipeline",children:[{type:"text",value:"Pipeline"}]}]}]}]}]}]}},slug:"2_Vocabulary-explained"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-channels",children:[{type:"text",value:"Intro to channels"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-http-channel",children:[{type:"text",value:"Example http-channel"}]}]}]}]}]}]}},slug:"3_Channels"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-processor",children:[{type:"text",value:"Intro to the processor"}]}]}]}]}},slug:"4_Processor"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-runners",children:[{type:"text",value:"Intro to runners"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-js-runner",children:[{type:"text",value:"Example js-runner"}]}]}]}]}]}]}},slug:"5_Runner"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-pipeline",children:[{type:"text",value:"Intro to the pipeline"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#test-header",children:[{type:"text",value:"Test header"}]}]}]}]}]}]}},slug:"6_Pipeline"},{title:"Why is this a title",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#why-is-configure-everything-in-linked-data",children:[{type:"text",value:"Why is configure everything in linked data?"}]}]}]}]}},slug:"7_Why"}]},"uses":{}},null];
-
-					Promise.all([
-						import("../_app/immutable/entry/start.c5ee4364.js"),
-						import("../_app/immutable/entry/app.503bc905.js")
-					]).then(([kit, app]) => {
-						kit.start(app, element, {
-							node_ids: [0, 2, 7],
-							data,
-							form: null,
-							error: null
-						});
-					});
-				}
-			</script>
-		</div>
-	</body>
-</html>
+  <span class="token function"><span class="token prefix">js<span class="token punctuation">:</span></span><span class="token local-name">rescReader</span></span> <span class="token url"><span class="token punctuation">&lt;</span>httpReader<span class="token punctuation">></span></span><span class="token punctuation">.</span></code>`,$,A,jn,nn,T,zn='<code class="language-shell">js-runner pipeline.ttl <span class="token parameter variable">-o</span> processors/*.ttl</code>',sn,d,x,G,yn;return{c(){f=e("h1"),h=e("a"),S=e("span"),an=i("Intro to the pipeline"),O=k(),M=e("p"),pn=i("The pipeline is the actual goal of the connector architecture. Connect processors of any kind together with channels and resolve the two language problem."),q=k(),m=e("p"),tn=i("Every part of information will come together in the following example. We defined a js-runner in the "),w=e("a"),en=i("runner"),on=i(" section and a HTTP channel in the "),j=e("a"),cn=i("channel"),ln=i(". Next we need to define some processors that will be part of this pipeline. Note that many processors can already be found in this github repo."),U=k(),H=e("p"),un=i("We define:"),X=k(),y=e("p"),L=e("strong"),kn=i("Send"),rn=i(": A js process that periodically sends a message to a channel writer."),z=k(),P=e("pre"),B=k(),E=e("p"),I=e("strong"),fn=i("Echo"),mn=i(": A js process that echo’s all messages from a reader to a writer"),D=k(),g=e("pre"),F=k(),_=e("p"),J=e("strong"),hn=i("Resc"),dn=i(": A js processor that prints all messages from a reader to stdout"),K=k(),v=e("pre"),Q=k(),W=e("p"),xn=i("Note: that the three processors are defined in the same source file, but this does not actually matter."),V=k(),N=e("p"),wn=i("Now comes the fun stuff, configuring the pipeline. We will create a memory channel that links the send processor to the echo processor, then a HTTP channel to the resc processor."),Y=k(),b=e("pre"),Z=k(),R=e("pre"),$=k(),A=e("p"),jn=i("Executing this pipeline would be as easy as running:"),nn=k(),T=e("pre"),sn=k(),d=e("h2"),x=e("a"),G=e("span"),yn=i("Test header"),this.h()},l(n){f=o(n,"H1",{id:!0});var a=c(f);h=o(a,"A",{"aria-hidden":!0,tabindex:!0,href:!0});var bn=c(h);S=o(bn,"SPAN",{class:!0}),c(S).forEach(s),bn.forEach(s),an=u(a,"Intro to the pipeline"),a.forEach(s),O=r(n),M=o(n,"P",{});var Rn=c(M);pn=u(Rn,"The pipeline is the actual goal of the connector architecture. Connect processors of any kind together with channels and resolve the two language problem."),Rn.forEach(s),q=r(n),m=o(n,"P",{});var C=c(m);tn=u(C,"Every part of information will come together in the following example. We defined a js-runner in the "),w=o(C,"A",{href:!0,rel:!0});var Tn=c(w);en=u(Tn,"runner"),Tn.forEach(s),on=u(C," section and a HTTP channel in the "),j=o(C,"A",{href:!0,rel:!0});var Mn=c(j);cn=u(Mn,"channel"),Mn.forEach(s),ln=u(C,". Next we need to define some processors that will be part of this pipeline. Note that many processors can already be found in this github repo."),C.forEach(s),U=r(n),H=o(n,"P",{});var Hn=c(H);un=u(Hn,"We define:"),Hn.forEach(s),X=r(n),y=o(n,"P",{});var Pn=c(y);L=o(Pn,"STRONG",{});var Wn=c(L);kn=u(Wn,"Send"),Wn.forEach(s),rn=u(Pn,": A js process that periodically sends a message to a channel writer."),Pn.forEach(s),z=r(n),P=o(n,"PRE",{class:!0});var Bn=c(P);Bn.forEach(s),B=r(n),E=o(n,"P",{});var En=c(E);I=o(En,"STRONG",{});var Nn=c(I);fn=u(Nn,"Echo"),Nn.forEach(s),mn=u(En,": A js process that echo’s all messages from a reader to a writer"),En.forEach(s),D=r(n),g=o(n,"PRE",{class:!0});var Dn=c(g);Dn.forEach(s),F=r(n),_=o(n,"P",{});var gn=c(_);J=o(gn,"STRONG",{});var An=c(J);hn=u(An,"Resc"),An.forEach(s),dn=u(gn,": A js processor that prints all messages from a reader to stdout"),gn.forEach(s),K=r(n),v=o(n,"PRE",{class:!0});var Fn=c(v);Fn.forEach(s),Q=r(n),W=o(n,"P",{});var Cn=c(W);xn=u(Cn,"Note: that the three processors are defined in the same source file, but this does not actually matter."),Cn.forEach(s),V=r(n),N=o(n,"P",{});var Sn=c(N);wn=u(Sn,"Now comes the fun stuff, configuring the pipeline. We will create a memory channel that links the send processor to the echo processor, then a HTTP channel to the resc processor."),Sn.forEach(s),Y=r(n),b=o(n,"PRE",{class:!0});var Kn=c(b);Kn.forEach(s),Z=r(n),R=o(n,"PRE",{class:!0});var Qn=c(R);Qn.forEach(s),$=r(n),A=o(n,"P",{});var Ln=c(A);jn=u(Ln,"Executing this pipeline would be as easy as running:"),Ln.forEach(s),nn=r(n),T=o(n,"PRE",{class:!0});var Vn=c(T);Vn.forEach(s),sn=r(n),d=o(n,"H2",{id:!0});var _n=c(d);x=o(_n,"A",{"aria-hidden":!0,tabindex:!0,href:!0});var In=c(x);G=o(In,"SPAN",{class:!0}),c(G).forEach(s),In.forEach(s),yn=u(_n,"Test header"),_n.forEach(s),this.h()},h(){l(S,"class","icon icon-link"),l(h,"aria-hidden","true"),l(h,"tabindex","-1"),l(h,"href","#intro-to-the-pipeline"),l(f,"id","intro-to-the-pipeline"),l(w,"href","https://github.com/TREEcg/connector-architecture/wiki/Runner"),l(w,"rel","nofollow"),l(j,"href","https://github.com/TREEcg/connector-architecture/wiki/Channel"),l(j,"rel","nofollow"),l(P,"class","language-turtle"),l(g,"class","language-turtle"),l(v,"class","language-turtle"),l(b,"class","language-undefined"),l(R,"class","language-turtle"),l(T,"class","language-shell"),l(G,"class","icon icon-link"),l(x,"aria-hidden","true"),l(x,"tabindex","-1"),l(x,"href","#test-header"),l(d,"id","test-header")},m(n,a){p(n,f,a),t(f,h),t(h,S),t(f,an),p(n,O,a),p(n,M,a),t(M,pn),p(n,q,a),p(n,m,a),t(m,tn),t(m,w),t(w,en),t(m,on),t(m,j),t(j,cn),t(m,ln),p(n,U,a),p(n,H,a),t(H,un),p(n,X,a),p(n,y,a),t(y,L),t(L,kn),t(y,rn),p(n,z,a),p(n,P,a),P.innerHTML=Gn,p(n,B,a),p(n,E,a),t(E,I),t(I,fn),t(E,mn),p(n,D,a),p(n,g,a),g.innerHTML=On,p(n,F,a),p(n,_,a),t(_,J),t(J,hn),t(_,dn),p(n,K,a),p(n,v,a),v.innerHTML=qn,p(n,Q,a),p(n,W,a),t(W,xn),p(n,V,a),p(n,N,a),t(N,wn),p(n,Y,a),p(n,b,a),b.innerHTML=Un,p(n,Z,a),p(n,R,a),R.innerHTML=Xn,p(n,$,a),p(n,A,a),t(A,jn),p(n,nn,a),p(n,T,a),T.innerHTML=zn,p(n,sn,a),p(n,d,a),t(d,x),t(x,G),t(d,yn)},p:vn,i:vn,o:vn,d(n){n&&s(f),n&&s(O),n&&s(M),n&&s(q),n&&s(m),n&&s(U),n&&s(H),n&&s(X),n&&s(y),n&&s(z),n&&s(P),n&&s(B),n&&s(E),n&&s(D),n&&s(g),n&&s(F),n&&s(_),n&&s(K),n&&s(v),n&&s(Q),n&&s(W),n&&s(V),n&&s(N),n&&s(Y),n&&s(b),n&&s(Z),n&&s(R),n&&s($),n&&s(A),n&&s(nn),n&&s(T),n&&s(sn),n&&s(d)}}}const as={toc:{index:null,endIndex:null,map:{type:"list",ordered:!1,spread:!0,children:[{type:"listItem",spread:!0,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-pipeline",children:[{type:"text",value:"Intro to the pipeline"}]}]},{type:"list",ordered:!1,spread:!1,children:[{type:"listItem",spread:!1,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#test-header",children:[{type:"text",value:"Test header"}]}]}]}]}]}]}}};class ps extends Yn{constructor(f){super(),Zn(this,f,null,ns,$n,{})}}export{ps as default,as as metadata};
