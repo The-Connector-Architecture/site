@@ -1,10 +1,12 @@
-import { DC, FNO, SHACL, createUriAndTermNamespace, RDF as RDFT, XSD } from "@treecg/types";
+import { DC, SHACL, createUriAndTermNamespace, RDF as RDFT, XSD } from "@treecg/types";
 import type * as RDF from "@rdfjs/types";
-import { Parser, Store } from "n3";
+import { Parser, Store, DataFactory } from "n3";
 
+const { namedNode } = DataFactory;
 export const JS = createUriAndTermNamespace("https://w3id.org/conn/js#", "file", "function", "location", "mapping", "JsProcess");
-export const CONN = createUriAndTermNamespace("https://w3id.org/conn#", "ReaderChannel", "WriterChannel");
+export const CONN = createUriAndTermNamespace("https://w3id.org/conn#", "ReaderChannel", "WriterChannel", "supportsChannel", "ProcessClass", "Channel");
 
+export type Kind = "Processor" | "Channel" | "Runner";
 export type ParameterType =
   "ReaderChannel" |
   "WriterChannel" |
@@ -13,11 +15,31 @@ export type ParameterType =
   "float" | "unknown";
 
 
+interface Base {
+  id: string;
+  title: string;
+  location: string;
+  description?: string;
+
+  parameters: Parameter[],
+}
+
 export interface Parameter {
   name?: string;
   type: ParameterType;
   path: string;
   optional: boolean,
+}
+
+export interface Processor extends Base {
+  type: string;
+}
+
+export interface Runner extends Base {
+  channels: string[],
+}
+
+export interface Channel extends Base {
 }
 
 function isOptional(minCount: RDF.Term | undefined): boolean {
@@ -57,14 +79,6 @@ function extractParameter(shProperty: RDF.Term, store: Store): Parameter {
   };
 }
 
-export interface Processor {
-  title: string;
-  location: string;
-  description?: string;
-  type: string;
-
-  parameters: Parameter[],
-}
 
 function getObj(subj: RDF.Term, pred: RDF.Term, store: Store): RDF.Term | undefined {
   const options = store.getObjects(subj, pred, null);
@@ -73,41 +87,99 @@ function getObj(subj: RDF.Term, pred: RDF.Term, store: Store): RDF.Term | undefi
   }
 }
 
-export function extractJsProcessor(subj: RDF.Term, store: Store, location: string): Processor {
-  const type = getObj(subj, RDFT.terms.type, store);
+function extractBase(subj: RDF.Term, store: Store, location: string): Base {
+  const id = subj.value;
+  const title = getObj(subj, DC.terms.title, store)?.value || subj.value;
+  const description = getObj(subj, DC.terms.description, store)?.value;
+
+  const shShape = store.getSubjects(SHACL.terms.targetClass, subj, null)[0];
+  let parameters: Parameter[];
+
+  if (!shShape) {
+    parameters = [];
+  } else {
+    parameters = store.getObjects(shShape, SHACL.terms.property, null).flatMap(x => {
+      try {
+        const parameter = extractParameter(x, store);
+        return [parameter];
+      } catch (ex) {
+        return [];
+      }
+    });
+  }
+
+  return {
+    id, title, description, parameters, location
+  }
+}
+
+export function extractProcessor(subj: RDF.Term, store: Store, loc: string): Processor {
+  const type = getObj(subj, RDFT.terms.type, store)?.value;
   if (!type) {
     throw "No type found!";
   }
 
-  const title = getObj(subj, DC.terms.title, store)?.value || subj.value;
-  const description = getObj(subj, DC.terms.description, store)?.value;
-
-  const mapping = getObj(subj, JS.terms.mapping, store);
-  if (!mapping) {
-    throw "No mapping found!";
-  }
-
-  const shShape = store.getSubjects(SHACL.terms.targetClass, subj, null)[0];
-  if (!shShape) {
-    throw "No SHACL shape found!";
-  }
-
-  const parameters = store.getObjects(shShape, SHACL.terms.property, null).flatMap(x => {
-    try {
-      const parameter = extractParameter(x, store);
-      return [parameter];
-    } catch (ex) {
-      return [];
-    }
-  });
+  const { id, title, description, parameters, location } = extractBase(subj, store, loc);
 
   return {
-    title, description, parameters, type: JS.JsProcess, location,
+    id, title, description, parameters, type, location,
   }
 }
 
+
+export function extractRunner(subj: RDF.Term, store: Store, loc: string): Runner {
+  const { id, title, description, parameters, location } = extractBase(subj, store, loc);
+
+  const channels = store.getObjects(subj, CONN.terms.supportsChannel, null).map(x => x.value);
+  return {
+    id, title, description, parameters, location, channels
+  }
+}
+
+export function extractChannel(subj: RDF.Term, store: Store, location: string): Channel {
+  return extractBase(subj, store, location);
+}
+
+export async function extractLocations(locations: string[]): Promise<{
+  procs: Processor[],
+  channels: Channel[],
+  runners: Runner[],
+}> {
+  const stores = await Promise.all(
+    locations.map(async loc => { return { store: await fetchStore(loc), loc }; }),
+  );
+
+  const runners: Runner[] = [];
+  const channels: Channel[] = [];
+
+  for (let store of stores) {
+    const runnerIds = store.store.getSubjects(RDFT.terms.type, CONN.terms.ProcessClass, null);
+    runners.push(...
+      runnerIds.map(x => extractRunner(x, store.store, store.loc))
+    );
+
+    const channelIds = store.store.getSubjects(RDFT.terms.type, CONN.terms.Channel, null);
+    channels.push(...
+      channelIds.map(x => extractChannel(x, store.store, store.loc))
+    );
+  }
+
+  const procs: Processor[] = [];
+
+  for (let store of stores) {
+    for (let runner of runners) {
+      const t = namedNode(runner.id);
+      const procIds = store.store.getSubjects(RDFT.terms.type, t, null);
+      procs.push(...
+        procIds.map(x => extractProcessor(x, store.store, store.loc))
+      );
+    }
+  }
+  return { procs, channels, runners };
+}
+
 export function extractProcessors(store: Store, location: string): Processor[] {
-  return store.getSubjects(RDFT.terms.type, JS.terms.JsProcess, null).map(x => extractJsProcessor(x, store, location));
+  return store.getSubjects(RDFT.terms.type, JS.terms.JsProcess, null).map(x => extractProcessor(x, store, location));
 }
 
 export async function fetchStore(url: string): Promise<Store> {
@@ -117,7 +189,6 @@ export async function fetchStore(url: string): Promise<Store> {
     const quads = new Parser().parse(data);
 
     return new Store(quads);
-
   } catch (e: any) {
     console.log("fetch failed", url);
     console.log(e);
