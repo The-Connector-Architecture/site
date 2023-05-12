@@ -1,5 +1,6 @@
 import type { Result } from "mdast-util-toc";
 import { parse } from "path";
+
 type GlobEntry = {
   metadata: Post;
   default: unknown;

@@ -22,7 +22,8 @@
 
   $: small = width < 1200;
   $: open = openState !== undefined ? openState : !small;
-  $: margin = open && small ? 480 : 0;
+  $: margin = (small) ? "2em" : "520px";
+  $: console.log("small", small);
 </script>
 
 <svelte:window bind:innerWidth={width} />
@@ -31,7 +32,7 @@
   <Drawer
     variant="dismissible"
     bind:open
-    style="width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"
+    style="max-width: 100%; width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"
   >
     <Header style="position: relative;">
       <DTitle>Table of Centents</DTitle>
@@ -61,7 +62,7 @@
     ><Label>Toggle navigation bar</Label></Button
   >
 
-  <div style="margin-left: {margin}px" class="margined">
+  <div style="padding-left: {margin}" class="margined container">
     <slot />
   </div>
 </div>
@@ -70,5 +71,8 @@
   .margined {
     transition: all 700ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .container {
+    padding-right: 2em;
   }
 </style>
