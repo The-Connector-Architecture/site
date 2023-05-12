@@ -1,0 +1,54 @@
+<script lang="ts">
+  import type { PageServerData } from "./$types";
+  import Component from "$lib/Component.svelte";
+
+  export let data: PageServerData;
+
+  const Processor: "Processor" = "Processor";
+  const procs = data.procs.map((inner) => {
+    return { inner, type: Processor };
+  });
+  const Channel: "Channel" = "Channel";
+  const channels = data.channels.map((inner) => {
+    return { inner, type: Channel };
+  });
+
+  const Runner: "Runner" = "Runner";
+  const runners = data.runners.map((inner) => {
+    return { inner, type: Runner };
+  });
+</script>
+
+<h3>Channels</h3>
+<div class="grid">
+  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
+  {#each channels as data}
+    <Component {data} />
+  {/each}
+</div>
+
+<h3>Runners</h3>
+<div class="grid">
+  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
+  {#each runners as data}
+    <Component {data} />
+  {/each}
+</div>
+
+<h3>Processors</h3>
+<div class="grid">
+  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
+  {#each procs as data}
+    <Component {data} />
+  {/each}
+</div>
+
+<style>
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 48px;
+    margin: 32px;
+  }
+</style>

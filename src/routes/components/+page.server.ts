@@ -23,8 +23,5 @@ export const load: PageServerLoad = async () => {
     "https://raw.githubusercontent.com/TREEcg/connector-architecture/main/channel/kafka.ttl",
     "https://raw.githubusercontent.com/TREEcg/connector-architecture/main/channel/ws.ttl",
   ];
-  const data = await extractLocations(locations);
-  console.log('data', data);
-  return data;
+  return await extractLocations(locations);
 };
-// Get all posts and add metadata

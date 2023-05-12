@@ -34,9 +34,9 @@ const config = {
       assets: 'build',
       fallback: null
     }),
-    // paths: {
-    //   base: "/site"
-    // },
+    paths: {
+      base: "/site"
+    },
     prerender: {
       entries: [
         '*',
