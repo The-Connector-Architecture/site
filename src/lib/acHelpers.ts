@@ -4,7 +4,7 @@ import { Parser, Store, DataFactory } from "n3";
 
 const { namedNode } = DataFactory;
 export const JS = createUriAndTermNamespace("https://w3id.org/conn/js#", "file", "function", "location", "mapping", "JsProcess");
-export const CONN = createUriAndTermNamespace("https://w3id.org/conn#", "ReaderChannel", "WriterChannel", "supportsChannel", "ProcessClass", "Channel");
+export const CONN = createUriAndTermNamespace("https://w3id.org/conn#", "ReaderChannel", "WriterChannel", "supportsChannel", "ProcessClass", "Channel", "reader", "writer");
 
 export type Kind = "Processor" | "Channel" | "Runner";
 export type ParameterType =
@@ -35,11 +35,22 @@ export interface Processor extends Base {
   type: string;
 }
 
+export interface ChannelRef {
+  title: string;
+  id: string;
+}
 export interface Runner extends Base {
-  channels: string[],
+  channels: ChannelRef[],
+}
+
+export interface ChannelHalf {
+  id: string;
+  parameters: Parameter[],
 }
 
 export interface Channel extends Base {
+  reader: ChannelHalf,
+  writer: ChannelHalf,
 }
 
 function isOptional(minCount: RDF.Term | undefined): boolean {
@@ -87,18 +98,11 @@ function getObj(subj: RDF.Term, pred: RDF.Term, store: Store): RDF.Term | undefi
   }
 }
 
-function extractBase(subj: RDF.Term, store: Store, location: string): Base {
-  const id = subj.value;
-  const title = getObj(subj, DC.terms.title, store)?.value || subj.value;
-  const description = getObj(subj, DC.terms.description, store)?.value;
-
+function extractProperties(subj: RDF.Term, store: Store): Parameter[] {
   const shShape = store.getSubjects(SHACL.terms.targetClass, subj, null)[0];
-  let parameters: Parameter[];
 
-  if (!shShape) {
-    parameters = [];
-  } else {
-    parameters = store.getObjects(shShape, SHACL.terms.property, null).flatMap(x => {
+  if (shShape) {
+    return store.getObjects(shShape, SHACL.terms.property, null).flatMap(x => {
       try {
         const parameter = extractParameter(x, store);
         return [parameter];
@@ -107,6 +111,16 @@ function extractBase(subj: RDF.Term, store: Store, location: string): Base {
       }
     });
   }
+
+  return [];
+}
+
+function extractBase(subj: RDF.Term, store: Store, location: string): Base {
+  const id = subj.value;
+  const title = getObj(subj, DC.terms.title, store)?.value || subj.value;
+  const description = getObj(subj, DC.terms.description, store)?.value;
+
+  const parameters = extractProperties(subj, store);
 
   return {
     id, title, description, parameters, location
@@ -127,17 +141,46 @@ export function extractProcessor(subj: RDF.Term, store: Store, loc: string): Pro
 }
 
 
-export function extractRunner(subj: RDF.Term, store: Store, loc: string): Runner {
+export function extractRunner(subj: RDF.Term, store: Store, loc: string, declared_channels: Channel[]): Runner {
   const { id, title, description, parameters, location } = extractBase(subj, store, loc);
 
-  const channels = store.getObjects(subj, CONN.terms.supportsChannel, null).map(x => x.value);
+  const channels = store.getObjects(subj, CONN.terms.supportsChannel, null).map(x => {
+    const c = declared_channels.find(c => c.id === x.value);
+    if (c) {
+      return {
+        title: c.title, id: c.id,
+      }
+    } else {
+      return {
+        title: x.value, id: x.value,
+      }
+    }
+  });
+
   return {
     id, title, description, parameters, location, channels
   }
 }
 
-export function extractChannel(subj: RDF.Term, store: Store, location: string): Channel {
-  return extractBase(subj, store, location);
+export function extractChannel(subj: RDF.Term, store: Store, loc: string): Channel {
+  const { id, title, description, location } = extractBase(subj, store, loc);
+
+  const readerId = getObj(subj, CONN.terms.reader, store);
+  const writerId = getObj(subj, CONN.terms.writer, store);
+
+  if (!(readerId && writerId)) {
+    throw "Reader and writer have to be defined";
+  }
+
+  const toHalf = (id: RDF.Term) => {
+    const parameters = extractProperties(id, store);
+    return {
+      id: id.value,
+      parameters,
+    };
+  };
+
+  return { id, title, description, location, parameters: [], writer: toHalf(writerId), reader: toHalf(readerId) };
 }
 
 export async function extractLocations(locations: string[]): Promise<{
@@ -153,14 +196,17 @@ export async function extractLocations(locations: string[]): Promise<{
   const channels: Channel[] = [];
 
   for (let store of stores) {
-    const runnerIds = store.store.getSubjects(RDFT.terms.type, CONN.terms.ProcessClass, null);
-    runners.push(...
-      runnerIds.map(x => extractRunner(x, store.store, store.loc))
-    );
 
     const channelIds = store.store.getSubjects(RDFT.terms.type, CONN.terms.Channel, null);
     channels.push(...
       channelIds.map(x => extractChannel(x, store.store, store.loc))
+    );
+  }
+
+  for (let store of stores) {
+    const runnerIds = store.store.getSubjects(RDFT.terms.type, CONN.terms.ProcessClass, null);
+    runners.push(...
+      runnerIds.map(x => extractRunner(x, store.store, store.loc, channels))
     );
   }
 

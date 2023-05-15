@@ -19,31 +19,38 @@
   });
 </script>
 
-<h3>Channels</h3>
+<div class="breaker">
+  <h3>Channels</h3>
+</div>
 <div class="grid">
-  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
   {#each channels as data}
     <Component {data} />
   {/each}
 </div>
 
-<h3>Runners</h3>
+<div class="breaker">
+  <h3>Runners</h3>
+</div>
 <div class="grid">
-  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
   {#each runners as data}
     <Component {data} />
   {/each}
 </div>
 
-<h3>Processors</h3>
+<div class="breaker">
+  <h3>Processors</h3>
+</div>
 <div class="grid">
-  <!-- <LayoutGrid innerGrid$style="  grid-auto-rows: 1fr;"> -->
   {#each procs as data}
     <Component {data} />
   {/each}
 </div>
 
 <style>
+  .breaker {
+    display: flex;
+    justify-content: center;
+  }
   .grid {
     display: flex;
     flex-wrap: wrap;

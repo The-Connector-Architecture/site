@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Processor, Kind, Channel, Runner } from "./acHelpers";
+  import Tooltip from "./helpers/Tooltip.svelte";
   import Param from "./Param.svelte";
+  import TocList from "./TocList.svelte";
 
   export let data:
     | { inner: Processor; type: "Processor" }
@@ -13,7 +15,6 @@
   const outputs = parameters.filter((x) => x.type === "WriterChannel");
   const rows = [...Array(Math.max(inputs.length, outputs.length))].map(
     (_, id) => {
-      console.log("id", id);
       return { input: inputs[id], output: outputs[id] };
     }
   );
@@ -24,7 +25,7 @@
 </script>
 
 <div class="mdc-elevation--z2 proc">
-  <h5>{title}</h5>
+  <h5><Tooltip tooltip={id}>{title}</Tooltip></h5>
   <div style="flex: 1 0 auto;">
     <p>
       {#if description}
@@ -68,10 +69,41 @@
     {/if}
   </div>
 
+  {#if data.type === "Runner"}
+    <strong>Usable chanels</strong>
+    <ul>
+      {#each data.inner.channels as channel}
+        <li>
+          <Tooltip tooltip={channel.id}>{channel.title}</Tooltip>
+        </li>
+      {/each}
+    </ul>
+  {/if}
+
   {#if data.type === "Processor"}
     <p>
       Runnable with {data.inner.type}.
     </p>
+  {/if}
+
+  {#if data.type === "Channel"}
+    <Tooltip tooltip={data.inner.reader.id}><strong>Reader description</strong></Tooltip>
+    <ul>
+      {#each data.inner.reader.parameters as reader}
+        <li>
+          <Param data={reader} />
+        </li>
+      {/each}
+    </ul>
+
+    <Tooltip tooltip={data.inner.writer.id}><strong>Writer description</strong></Tooltip>
+    <ul>
+      {#each data.inner.writer.parameters as writer}
+        <li>
+          <Param data={writer} />
+        </li>
+      {/each}
+    </ul>
   {/if}
 
   <a target="_blank" href={location}> Location </a>
