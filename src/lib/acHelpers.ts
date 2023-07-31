@@ -1,6 +1,13 @@
-import { DC, SHACL, createUriAndTermNamespace, RDF as RDFT, XSD } from "@treecg/types";
+import { DC, SHACL, createUriAndTermNamespace, RDF as RDFT, XSD, OWL } from "@treecg/types";
 import type * as RDF from "@rdfjs/types";
-import { Parser, Store, DataFactory } from "n3";
+import { Parser, Store, DataFactory, StreamParser } from "n3";
+import { subjects, unique } from "rdf-lens";
+import { procLens } from "./pipeline/processor";
+import http from "http";
+import https from "https";
+import type stream from "stream";
+import { page } from "$app/stores";
+import { get } from "svelte/store";
 
 const { namedNode } = DataFactory;
 export const JS = createUriAndTermNamespace("https://w3id.org/conn/js#", "file", "function", "location", "mapping", "JsProcess");
@@ -192,6 +199,13 @@ export async function extractLocations(locations: string[]): Promise<{
     locations.map(async loc => { return { store: await fetchStore(loc), loc }; }),
   );
 
+  for(let st of stores) {
+    const quads = st.store.getQuads(null, null, null, null);
+    const procs = subjects().then(unique()).asMulti().thenSome(procLens(), true).execute(quads);
+
+    console.log("found procs", procs);
+  }
+
   const runners: Runner[] = [];
   const channels: Channel[] = [];
 
@@ -242,3 +256,70 @@ export async function fetchStore(url: string): Promise<Store> {
   }
 }
 
+async function get_readstream(location: string): Promise<stream.Readable> {
+  if (location.startsWith("https")) {
+    return new Promise((res) => {
+      https.get(location, res);
+    });
+  } else if (location.startsWith("http")) {
+    return new Promise((res) => {
+      http.get(location, res);
+    });
+  } else {
+    throw "nope"
+  }
+}
+
+function toArray<T>(stream: stream.Readable): Promise<T[]> {
+  const output: T[] = []
+  return new Promise((res, rej) => {
+    stream.on("data", x => output.push(x));
+    stream.on("end", () => res(output));
+    stream.on("close", () => res(output));
+    stream.on("error", rej);
+  });
+} 
+
+export async function load_quads(location: string, baseIRI?: string) {
+  const parser = new StreamParser({ baseIRI: baseIRI || location});
+  const rdfStream = await get_readstream(location);
+  rdfStream.pipe(parser);
+
+  const quads: RDF.Quad[] = await toArray(parser);
+  return quads;
+}
+
+const loaded = new Set();
+export async function load_store(location: string, store: Store, recursive = true, process?: (quads: RDF.Quad[], baseIRI: string) =>PromiseLike<RDF.Quad[]>) {
+  console.log("STARTING LOAD STORE");
+
+  const _process = process || ((q: RDF.Quad[]) => q);
+
+  if (loaded.has(location)) { return; }
+  loaded.add(location);
+
+  console.log("Loading", location);
+
+  const quads = await load_quads(location);
+  store.addQuads(await _process(quads, location));
+
+  if (recursive) {
+    const other_imports = store.getObjects(namedNode(location), OWL.terms.imports, null)
+    for (let other of other_imports) {
+      await load_store(other.value, store, true, process);
+    }
+  }
+}
+
+export async function load_text(text: string, store: Store, recursive = true) {
+  const baseIRI = get(page).url.toString();
+  const quads = new Parser({baseIRI}).parse(text);
+  store.addQuads(quads);
+
+  if (recursive) {
+    const other_imports = store.getObjects(namedNode(baseIRI), OWL.terms.imports, null)
+    for (let other of other_imports) {
+      await load_store(other.value, store, true);
+    }
+  }
+}

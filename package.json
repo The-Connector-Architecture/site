@@ -37,6 +37,7 @@
 		"mdsvex": "^0.10.6",
 		"mermaid": "^10.1.0",
 		"n3": "^1.16.4",
+		"rdf-lens": "file:../../rdf-lens",
 		"rehype-autolink-headings": "^6.1.1",
 		"rehype-slug": "^5.1.0",
 		"remark-containers": "^1.2.0",
@@ -49,5 +50,8 @@
 		"typescript": "^5.0.0",
 		"vite": "^4.2.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@antv/g6": "^4.8.20"
+	}
 }

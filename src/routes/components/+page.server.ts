@@ -5,11 +5,11 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async () => {
   const locations = [
     // Processors
-    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/sdsify.ttl",
-    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/2_bucketstep.ttl",
-    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/generator.ttl",
-    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/stringManipulations.ttl",
-    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/yarrrml.ttl",
+    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/configs/sdsify.ttl",
+    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/configs/2_bucketstep.ttl",
+    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/configs/generator.ttl",
+    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/configs/stringManipulations.ttl",
+    "https://raw.githubusercontent.com/ajuvercr/sds-processors/master/configs/yarrrml.ttl",
     "https://raw.githubusercontent.com/TREEcg/sds-storage-writer-mongo/master/step.ttl",
     "https://raw.githubusercontent.com/julianrojas87/rml-mapper-processor-ts/master/rmlMapper.ttl",
 

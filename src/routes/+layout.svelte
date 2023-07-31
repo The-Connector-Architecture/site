@@ -51,6 +51,7 @@
       <Button on:click={() => goto(base+"/docs/1_Home")}><Label>Docs</Label></Button>
       <Button on:click={() => goto(base+"/getting-started")}><Label>Getting Started</Label></Button>
       <Button on:click={() => goto(base+"/components")}><Label>Components</Label></Button>
+      <Button on:click={() => goto(base+"/live")}><Label>Live</Label></Button>
     </Section>
   </Row>
 </TopAppBar>
