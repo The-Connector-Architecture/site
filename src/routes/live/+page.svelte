@@ -1,235 +1,297 @@
 <script lang="ts">
-  import G6Graph from "$lib/components/G6Graph.svelte";
-  import { load_text } from "$lib/acHelpers";
-  // import { Store } from "n3";
+  import type { Node as DNode } from "dagre";
+  import { load_text, load_strings } from "$lib/acHelpers";
+  import { Quad, Store } from "n3";
+  import SourceList from "$lib/components/SourceList.svelte";
+  import type { Turtle } from "$lib/components/Source.svelte";
+  import { subjects, unique } from "rdf-lens";
+  import {
+    StepLens,
+    type PipelineStep,
+    sizedStep,
+  } from "$lib/pipeline/pipeline";
+  import { procLens, type Proc } from "$lib/pipeline/processor";
+  import Processor from "$lib/components/Processor.svelte";
+  import { DGraph } from "$lib/graph";
+  import type { Sized } from "$lib/graph";
+  import Step from "$lib/components/Step.svelte";
+  import type { GraphEdge } from "dagre";
+  import { get, writable } from "svelte/store";
 
+  type Port = {
+    id: string;
+    ty: "input" | "output";
+    width: number;
+    height: number;
+  };
+
+  let portCount = 0;
+
+  function genPort(ty: Port["ty"]): Port {
+    portCount += 1;
+    return { id: "port-" + portCount, ty, width: 40, height: 40 };
+  }
+
+  type S = { location: string; files: Turtle[]; key: number }[];
   let value = ``;
+  let sources: S = [
+    {
+      location: "https://github.com/ajuvercr/mumo-pipeline/tree/main",
+      files: [],
+      key: 0,
+    },
+  ];
 
-  // async function getData(value: string) {
-  //   if (value) {
-  //     const store = new Store();
-  //     await load_text(value, store);
-  //   }
-  // }
-  //
-  // $: getData(value);
+  let procs: Proc[] = [];
 
-  const registerFn = async (G6: any) => {
-    G6.registerNode(
-      "flow-rect",
-      {
-        shapeType: "flow-rect",
-        draw(cfg: { label: string; size: [number, number] }, group: any) {
-          console.log(cfg, group);
-          const { label } = cfg;
+  let thisQuads: Quad[] = [];
+  let quads: Quad[] = [];
+  let w = 0;
+  let h = 0;
 
-          const grey = "#CED4D9";
-          const rectConfig = {
-            width: cfg.size[0],
-            height: cfg.size[1],
-            lineWidth: 1,
-            fontSize: 12,
-            fill: "#fff",
-            radius: 4,
-            stroke: grey,
-            opacity: 1,
-          };
+  let data: {
+    nodes: DNode<PipelineStep | Port>[];
+    edges: GraphEdge[];
+    width: number;
+    height: number;
+  } = {
+    nodes: [],
+    edges: [],
+    width: 0,
+    height: 0,
+  };
 
-          const nodeOrigin = {
-            // x: -rectConfig.width / 2,
-            // y: -rectConfig.height / 2,
-            x: 0,
-            y: 0,
-          };
-
-          const textConfig = {
-            textAlign: "left",
-            textBaseline: "bottom",
-          };
-
-          const rect = group.addShape("rect", {
-            attrs: {
-              x: nodeOrigin.x,
-              y: nodeOrigin.y,
-              ...rectConfig,
-            },
-          });
-
-          const name = label;
-
-          console.log(nodeOrigin);
-          // label title
-          group.addShape("text", {
-            attrs: {
-              ...textConfig,
-              x: 4 + nodeOrigin.x,
-              y: 16 + nodeOrigin.y,
-              text: name.length,
-              fontSize: 12,
-              opacity: 0.85,
-              fill: "#000",
-              cursor: "pointer",
-            },
-            // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
-            name: "name-shape",
-          });
-
-          return rect;
-        },
-      },
-      "rect"
+  async function updateQuads(start: Quad[], sources: S) {
+    const qs = await Promise.all(
+      sources
+        .flatMap((x) =>
+          x.files.map(({ content, path, enabled }) => ({
+            content,
+            path,
+            base: x.location,
+            enabled,
+          }))
+        )
+        .filter((x) => x.enabled)
+        .map((x) => load_strings(get(x.content), x.base + "/" + x.path))
     );
-  };
-  const options = {
-    container: "mountNode",
-    fitView: true,
-    // fitCenter: true,
-    workerEnabled: false,
-    // padding: [50, 50],
-    // defaultLevel: 3,
-    // defaultZoom: 0.8,
-    modes: { default: ["zoom-canvas", "drag-canvas"] },
-    defaultNode: {
-      size: [30, 20],
-      type: "rect",
-      style: {
-        lineWidth: 2,
-        stroke: "#5B8FF9",
-        fill: "#C6E5FF",
-      },
-    },
-    layout: {
-      type: "dagre",
-      rankdir: "LR",
-      align: "UL",
-      controlPoints: true,
-      nodesepFunc: () => 1,
-      ranksepFunc: () => 1,
-    },
-    defaultEdge: {
-      type: "polyline",
-      size: 1,
-      color: "#e2e2e2",
-      style: {
-        endArrow: {
-          path: "M 0,0 L 8,4 L 8,-4 Z",
-          fill: "#e2e2e2",
-        },
-        radius: 620,
-      },
-    },
-  };
-  const data = {
-    nodes: [
-      {
-        id: "0",
-        label: "Test",
-      },
-      {
-        id: "1",
-        label: "1",
-      },
-      {
-        id: "2",
-        label: "2",
-      },
-      {
-        id: "3",
-        label: "3",
-      },
-      {
-        id: "4",
-        label: "4",
-      },
-      {
-        id: "5",
-        label: "5",
-      },
-      {
-        id: "6",
-        label: "6",
-      },
-      {
-        id: "7",
-        label: "7",
-      },
-      {
-        id: "8",
-        label: "8",
-      },
-      {
-        id: "9",
-        label: "9",
-      },
-    ],
-    edges: [
-      {
-        source: "0",
-        target: "1",
-      },
-      {
-        source: "0",
-        target: "2",
-      },
-      {
-        source: "1",
-        target: "4",
-      },
-      {
-        source: "0",
-        target: "3",
-      },
-      {
-        source: "3",
-        target: "4",
-      },
-      {
-        source: "4",
-        target: "5",
-      },
-      {
-        source: "4",
-        target: "6",
-      },
-      {
-        source: "5",
-        target: "7",
-      },
-      {
-        source: "5",
-        target: "8",
-      },
-      {
-        source: "8",
-        target: "9",
-      },
-      {
-        source: "2",
-        target: "9",
-      },
-      {
-        source: "3",
-        target: "9",
-      },
-    ],
-  };
+
+    quads = [...start, ...qs.flat()];
+
+    const subsL = subjects().then(unique()).asMulti();
+    const stepsStart = performance.now();
+    const steps = subsL.thenSome(StepLens(), true).execute(quads);
+    const stepsEnd = performance.now();
+
+    const procsStart = performance.now();
+    procs = subsL.thenSome(procLens(), true).execute(quads);
+    const procsEnd = performance.now();
+
+    console.log("steps", stepsEnd - stepsStart, "ms", steps);
+    console.log("procs", procsEnd - procsStart, "ms", procs);
+
+    const readers: { [id: string]: string } = {};
+    const writers: { [id: string]: string } = {};
+    const total: Set<string> = new Set();
+    const dgraph = new DGraph<(PipelineStep & Sized) | (Port & Sized), {}>();
+
+    for (let step of steps) {
+      dgraph.addNode(step.id, sizedStep(step));
+      for (let reader of step.readers) {
+        readers[reader.value] = step.id;
+        total.add(reader.value);
+      }
+
+      for (let writer of step.writers) {
+        writers[writer.value] = step.id;
+        total.add(writer.value);
+      }
+    }
+
+    for (let channel of total.keys()) {
+      const reader: string | undefined = readers[channel];
+      const writer: string | undefined = writers[channel];
+      if (reader && writer) {
+        dgraph.addEdge(writer, reader, {});
+      } else {
+        if (reader) {
+          const port = genPort("input");
+          dgraph.addNode(port.id, port);
+          dgraph.addEdge(port.id, reader, {});
+        }
+        if (writer) {
+          const port = genPort("output");
+          dgraph.addNode(port.id, port);
+          dgraph.addEdge(writer, port.id, {});
+        }
+      }
+    }
+
+    data = dgraph.calculate();
+
+    w = data.width;
+    h = data.height;
+  }
+
+  $: updateQuads(thisQuads, sources);
+
+  async function getData(value: string) {
+    if (value) {
+      const store = new Store();
+      await load_text(value, store);
+      thisQuads = store.getQuads(null, null, null, null);
+    }
+  }
+
+  function getArrowLine(points: { x: number; y: number }[]): string {
+    if (points.length < 3) {
+      const [start, end] = points;
+      return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+    }
+
+    const [start, first, ...next] = points;
+    let o = `M ${start.x} ${start.y} L ${first.x} ${first.y}`;
+
+    for (let n of next) {
+      o += ` L ${n.x} ${n.y}`;
+    }
+
+    return o;
+  }
+  function isPort(x: Port | PipelineStep): x is Port {
+    return !("proc" in x);
+  }
+
+  let current = writable("");
+  $: getData(value);
 </script>
 
 <main>
-  <h1>Hello Svelte-g6</h1>
-  <G6Graph style="border: black 1px solid" {options} {data} init={registerFn} />
+  <section id="graph">
+    <div class="wrap" style="width: {w}px; height: {h}px;">
+      <svg
+        width={w + "px"}
+        height={h + "px"}
+        style="width: {w}px; height: {h}px"
+      >
+        <defs>
+          <marker
+            id="head"
+            viewBox="0 0 10 10"
+            refX="0"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="4"
+            markerHeight="3"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
 
-  <textarea class="area" placeholder="Drop in your pipeline config" {value} />
+        {#each data.edges as { points }}
+          <path
+            d={getArrowLine(points)}
+            marker-mid="url(#head)"
+            stroke-width="4"
+            stroke="black"
+          />
+        {/each}
+      </svg>
+      {#each data.nodes as step}
+        <div
+          class="testing"
+          style="width: {step.width}px; height: {step.height}px; top: {step.y -
+            step.height * 0.5}px; left: {step.x - step.width * 0.5}px;"
+        >
+          {#if isPort(step)}
+            <div class={"port " + step.ty}>{step.ty}</div>
+          {:else}
+            <Step {step} />
+          {/if}
+        </div>
+      {/each}
+    </div>
+  </section>
+  <section id="components">
+    {#each procs as proc}
+      <Processor {proc} />
+    {/each}
+  </section>
+  <section id="input">
+    <textarea
+      class="area"
+      placeholder="Drop in your pipeline config"
+      bind:value={$current}
+    />
+  </section>
+  <section id="list">
+    <SourceList bind:items={sources} on:select2={(x) => (current = x.detail)} />
+  </section>
 </main>
 
 <style>
   main {
     font-family: sans-serif;
-    text-align: center;
+    min-height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 600px;
+    grid-template-rows: minmax(0, 1fr) 300px;
+    grid-template-areas:
+      "graph comps"
+      "text sources";
+    gap: 16px;
+    overflow: hidden;
+  }
+
+  .testing {
+    border: 2px solid black;
+    display: inline;
+    position: absolute;
+  }
+
+  main section {
+    place-self: stretch stretch;
+    width: 100%;
+    height: 100%;
+  }
+
+  #input {
+    grid-area: text;
+  }
+  #list {
+    grid-area: sources;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+
+  #components {
+    grid-area: comps;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: auto;
+  }
+
+  #graph {
+    overflow: auto;
+  }
+
+  .wrap {
+    position: relative;
+    margin: auto;
+  }
+
+  #graph div svg {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   textarea {
-    width: 80%;
-    min-height: 200px;
+    width: 100%;
+    height: 100%;
   }
 </style>

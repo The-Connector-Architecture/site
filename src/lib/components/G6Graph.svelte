@@ -1,9 +1,8 @@
 <script lang="ts">
+  import { keyAction } from "$lib/utilBrowser";
   import type G6T from "@antv/g6";
   import type { Graph } from "@antv/g6";
   import { onMount, createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
 
   export let options = {};
   export let data = {};
@@ -21,13 +20,10 @@
 
   const animateCfg = { duration: 200, easing: "easeCubic" };
   $: isDataEmpty = !!data;
-  function onKeyDown(e: KeyboardEvent) {
-    console.log(e.key, e.ctrlKey);
-    if (e.key === "r" && e.ctrlKey) {
-      if (graph && container) {
-        console.log("fit center");
-        graph.fitCenter(true, animateCfg);
-      }
+  function fit() {
+    if (graph && container) {
+      console.log("fit center");
+      graph.fitCenter(true, animateCfg);
     }
   }
 
@@ -70,6 +66,7 @@
       graph.data(data);
       graph.render();
     }
+    console.log("end onmount graph");
 
     return () => {
       graph.destroy();
@@ -86,17 +83,17 @@
   $: {
     if (graph) {
       Object.entries(prevEvents).forEach(([name, cb]) => {
-        graph.off(name, cb);
+        graph.off(name, <any>cb);
       });
       Object.entries(events).forEach(([name, cb]) => {
-        graph.on(name, cb);
+        graph.on(name, <any>cb);
       });
       prevEvents = events;
     }
   }
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window on:keydown={keyAction("r", fit)} />
 <div
   bind:this={wrapper}
   class="g6-wrapper"
@@ -108,7 +105,7 @@
 </div>
 
 <style>
-  .g6-container,
+  .g6-wrapper,
   .g6-container {
     width: 100%;
     height: 100%;

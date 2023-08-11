@@ -14,6 +14,8 @@
 		"lint": "eslint ."
 	},
 	"devDependencies": {
+		"@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+		"@esbuild-plugins/node-modules-polyfill": "^0.2.2",
 		"@jsdevtools/rehype-toc": "^3.0.2",
 		"@material/elevation": "^14.0.0",
 		"@material/typography": "^14.0.0",
@@ -30,8 +32,10 @@
 		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.5.0",
 		"@treecg/types": "^0.4.2",
+		"@types/dagre": "^0.7.49",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"dagre": "^0.8.5",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte3": "^4.0.0",
 		"mdsvex": "^0.10.6",
@@ -43,9 +47,13 @@
 		"remark-containers": "^1.2.0",
 		"remark-toc": "^8.0.1",
 		"remark-toc-matter": "file:./remark-toc-matter",
+		"rollup-plugin-polyfill-node": "^0.12.0",
 		"smui-theme": "^7.0.0-beta.4",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
+		"svelte-icons": "^2.1.0",
+		"svelte-infinite-viewer": "^0.27.0",
+		"svelte-moveable": "^0.43.1",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^4.2.0"
