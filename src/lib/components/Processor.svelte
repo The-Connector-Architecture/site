@@ -21,6 +21,10 @@
 </section>
 
 <style>
+  section {
+    display: inline;
+
+  }
   ul li {
     display: flex;
     justify-content: space-between;

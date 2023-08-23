@@ -1,36 +1,19 @@
 <script lang="ts">
   import { keyAction } from "$lib/utilBrowser";
-  import { writable } from "svelte/store";
-  import type { Turtle } from "./Source.svelte";
   import Source from "./Source.svelte";
   import MdSend from "svelte-icons/md/MdSend.svelte";
-  import { createEventDispatcher } from "svelte";
+    import type { State } from "$lib/helpers/sourceState";
+    import SourceItem from "./SourceItem.svelte";
 
-  export let items: { location: string; files: Turtle[]; key: number }[] = [
-    {
-      location: "https://github.com/ajuvercr/mumo-pipeline/tree/main",
-      files: [],
-      key: 0,
-    },
-  ];
+  export let state: State;
 
-  let number = 1;
   let search: string = "";
-
-  let selected = writable({ id: 0, i: 0 });
+  const cs = state.children;
+  const externals = state.external;
 
   function add() {
-    if (!location) return;
-    items = [{ location: search, files: [], key: number }, ...items];
-    number += 1;
-    search = "";
-  }
-
-  const dispatch = createEventDispatcher();
-
-  function deleteItem(i: number) {
-    items.splice(i, 1);
-    items = items;
+    if (!search) return;
+    state.add(search);
   }
 </script>
 
@@ -40,17 +23,15 @@
     <MdSend />
   </div>
 </header>
-{#each items as { location, files, key }, i (key)}
-  <Source
-    on:select={(x) => dispatch("select2", x.detail)}
-    on:loaded={() => console.log("loaded", i)}
-    on:delete={() => deleteItem(i)}
-    {location}
-    {selected}
-    {key}
-    bind:files
-  />
+
+<SourceItem child={state.local} parent={state} />
+
+{#each $cs as child}
+<Source on:update {child} />
 {/each}
+
+  <Source on:update child={externals} />
+
 
 <style>
   header {

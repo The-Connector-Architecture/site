@@ -1,233 +1,125 @@
 <script lang="ts">
-  import type { Node as DNode } from "dagre";
-  import { load_text, load_strings } from "$lib/acHelpers";
-  import { Quad, Store } from "n3";
+  import { load } from "$lib/acHelpers";
   import SourceList from "$lib/components/SourceList.svelte";
-  import type { Turtle } from "$lib/components/Source.svelte";
-  import { subjects, unique } from "rdf-lens";
-  import {
-    StepLens,
-    type PipelineStep,
-    sizedStep,
-  } from "$lib/pipeline/pipeline";
-  import { procLens, type Proc } from "$lib/pipeline/processor";
+  import type { Proc } from "$lib/pipeline/processor";
   import Processor from "$lib/components/Processor.svelte";
-  import { DGraph } from "$lib/graph";
-  import type { Sized } from "$lib/graph";
-  import Step from "$lib/components/Step.svelte";
-  import type { GraphEdge } from "dagre";
-  import { get, writable } from "svelte/store";
+  import { generateGraph } from "$lib/graph";
+  import { State } from "$lib/helpers/sourceState";
+  import { keyAction } from "$lib/utilBrowser";
+  import PipelineGraph, { type DataType } from "$lib/components/PipelineGraph.svelte";
 
-  type Port = {
-    id: string;
-    ty: "input" | "output";
-    width: number;
-    height: number;
-  };
-
-  let portCount = 0;
-
-  function genPort(ty: Port["ty"]): Port {
-    portCount += 1;
-    return { id: "port-" + portCount, ty, width: 40, height: 40 };
-  }
-
-  type S = { location: string; files: Turtle[]; key: number }[];
-  let value = ``;
-  let sources: S = [
-    {
-      location: "https://github.com/ajuvercr/mumo-pipeline/tree/main",
-      files: [],
-      key: 0,
-    },
-  ];
+  export const updateQuads = debounce(_updateQuads, 200);
+  const  state = new State();
+  state.add("https://github.com/ajuvercr/mumo-pipeline/tree/main")
+  const current = state.current;
 
   let procs: Proc[] = [];
+  current.subscribe(updateQuads);
 
-  let thisQuads: Quad[] = [];
-  let quads: Quad[] = [];
-  let w = 0;
-  let h = 0;
-
-  let data: {
-    nodes: DNode<PipelineStep | Port>[];
-    edges: GraphEdge[];
-    width: number;
-    height: number;
-  } = {
+  let data: DataType = {
     nodes: [],
     edges: [],
     width: 0,
     height: 0,
   };
 
-  async function updateQuads(start: Quad[], sources: S) {
-    const qs = await Promise.all(
-      sources
-        .flatMap((x) =>
-          x.files.map(({ content, path, enabled }) => ({
-            content,
-            path,
-            base: x.location,
-            enabled,
-          }))
-        )
-        .filter((x) => x.enabled)
-        .map((x) => load_strings(get(x.content), x.base + "/" + x.path))
-    );
+  function debounce(fn: () => any, ms = 300): () => void {
+    let timeoutId: ReturnType<typeof setTimeout>;
 
-    quads = [...start, ...qs.flat()];
+    return function (this: any) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(fn, ms);
+    };
+  }
 
-    const subsL = subjects().then(unique()).asMulti();
-    const stepsStart = performance.now();
-    const steps = subsL.thenSome(StepLens(), true).execute(quads);
-    const stepsEnd = performance.now();
+  async function _updateQuads() {
+    const loaded = new Set<string>();
+    console.log("updating quads");
+    const files = state.files();
+    const quads = [];
 
-    const procsStart = performance.now();
-    procs = subsL.thenSome(procLens(), true).execute(quads);
-    const procsEnd = performance.now();
+    for(let x of files) {
+      if(!x.enabled) continue;
 
-    console.log("steps", stepsEnd - stepsStart, "ms", steps);
-    console.log("procs", procsEnd - procsStart, "ms", procs);
+      const new_quads = await load(
+        x.url, loaded, state.store, x => state.add_external(x)
+      );
 
-    const readers: { [id: string]: string } = {};
-    const writers: { [id: string]: string } = {};
-    const total: Set<string> = new Set();
-    const dgraph = new DGraph<(PipelineStep & Sized) | (Port & Sized), {}>();
-
-    for (let step of steps) {
-      dgraph.addNode(step.id, sizedStep(step));
-      for (let reader of step.readers) {
-        readers[reader.value] = step.id;
-        total.add(reader.value);
-      }
-
-      for (let writer of step.writers) {
-        writers[writer.value] = step.id;
-        total.add(writer.value);
-      }
+      quads.push(...new_quads);
     }
 
-    for (let channel of total.keys()) {
-      const reader: string | undefined = readers[channel];
-      const writer: string | undefined = writers[channel];
-      if (reader && writer) {
-        dgraph.addEdge(writer, reader, {});
-      } else {
-        if (reader) {
-          const port = genPort("input");
-          dgraph.addNode(port.id, port);
-          dgraph.addEdge(port.id, reader, {});
-        }
-        if (writer) {
-          const port = genPort("output");
-          dgraph.addNode(port.id, port);
-          dgraph.addEdge(writer, port.id, {});
-        }
-      }
-    }
-
+    const [dgraph, p] = generateGraph(quads);
+    procs = p;
     data = dgraph.calculate();
-
-    w = data.width;
-    h = data.height;
   }
 
-  $: updateQuads(thisQuads, sources);
+  let right: number = 750;
+  let up1: number = 400;
+  let up2: number = 400;
 
-  async function getData(value: string) {
-    if (value) {
-      const store = new Store();
-      await load_text(value, store);
-      thisQuads = store.getQuads(null, null, null, null);
+  let moving = {hor: false, up1: false, up2: false};
+
+  let loc = {x: 0, y: 0};
+  let maxWidth = 0;
+  let maxHeight = 0;
+
+  $:console.log("width, height", maxWidth, maxHeight)
+
+  function move(e: MouseEvent) {
+    if(moving.hor) {
+      right += loc.x - e.x;
     }
-  }
-
-  function getArrowLine(points: { x: number; y: number }[]): string {
-    if (points.length < 3) {
-      const [start, end] = points;
-      return `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+    if(moving.up1) {
+      up1 += loc.y - e.y;
     }
-
-    const [start, first, ...next] = points;
-    let o = `M ${start.x} ${start.y} L ${first.x} ${first.y}`;
-
-    for (let n of next) {
-      o += ` L ${n.x} ${n.y}`;
+    if(moving.up2) {
+      up2 += loc.y - e.y;
     }
-
-    return o;
+    loc = {x: e.x, y: e.y};
   }
-  function isPort(x: Port | PipelineStep): x is Port {
-    return !("proc" in x);
-  }
-
-  let current = writable("");
-  $: getData(value);
 </script>
 
-<main>
-  <section id="graph">
-    <div class="wrap" style="width: {w}px; height: {h}px;">
-      <svg
-        width={w + "px"}
-        height={h + "px"}
-        style="width: {w}px; height: {h}px"
-      >
-        <defs>
-          <marker
-            id="head"
-            viewBox="0 0 10 10"
-            refX="0"
-            refY="5"
-            markerUnits="strokeWidth"
-            markerWidth="4"
-            markerHeight="3"
-            orient="auto"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-        </defs>
+<main on:mousemove={move} on:mouseup={() => moving = {up1: false, up2: false, hor: false}} bind:clientWidth={maxWidth} bind:clientHeight={maxHeight} >
+  <div class="hor">
+    <div class="vert interactions" style="width: {maxWidth - right - 8}px">
 
-        {#each data.edges as { points }}
-          <path
-            d={getArrowLine(points)}
-            marker-mid="url(#head)"
-            stroke-width="4"
-            stroke="black"
-          />
-        {/each}
-      </svg>
-      {#each data.nodes as step}
-        <div
-          class="testing"
-          style="width: {step.width}px; height: {step.height}px; top: {step.y -
-            step.height * 0.5}px; left: {step.x - step.width * 0.5}px;"
-        >
-          {#if isPort(step)}
-            <div class={"port " + step.ty}>{step.ty}</div>
-          {:else}
-            <Step {step} />
-          {/if}
-        </div>
-      {/each}
+      <section id="graph" style="height: {maxHeight - up1 - 8}px">
+        <PipelineGraph {data} />
+      </section>
+      <div class="hordiv div" 
+         on:mousedown={() => moving.up1 = true}>
+      </div>
+      <section id="input" style="height: {up1}px;">
+        <textarea
+          class="area"
+          placeholder="Drop in your pipeline config"
+          bind:value={$current}
+        />
+      </section>
     </div>
-  </section>
-  <section id="components">
-    {#each procs as proc}
-      <Processor {proc} />
-    {/each}
-  </section>
-  <section id="input">
-    <textarea
-      class="area"
-      placeholder="Drop in your pipeline config"
-      bind:value={$current}
-    />
-  </section>
-  <section id="list">
-    <SourceList bind:items={sources} on:select2={(x) => (current = x.detail)} />
-  </section>
+
+      <div class="vertdiv div" 
+         on:mousedown={() => moving.hor = true}>
+      </div>
+
+    <div class="vert lists" style="width: {right}px;">
+      <section id="components" style="height: {maxHeight - up2 - 8}px">
+        <div>
+          {#each procs as proc}
+            <Processor {proc} />
+          {/each}
+        </div>
+      </section>
+
+      <div class="hordiv div" 
+         on:mousedown={() => moving.up2 = true}>
+      </div>
+
+      <section id="list" style="height: {up2}px;">
+        <SourceList on:update={() => updateQuads()} {state} />
+      </section>
+    </div>
+  </div>
 </main>
 
 <style>
@@ -235,63 +127,48 @@
     font-family: sans-serif;
     min-height: calc(100vh - 64px);
     max-height: calc(100vh - 64px);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 600px;
-    grid-template-rows: minmax(0, 1fr) 300px;
-    grid-template-areas:
-      "graph comps"
-      "text sources";
-    gap: 16px;
     overflow: hidden;
   }
 
-  .testing {
-    border: 2px solid black;
-    display: inline;
-    position: absolute;
+
+  .div {
+    background-color: #333;
+    cursor: pointer;
   }
 
-  main section {
-    place-self: stretch stretch;
+  .vertdiv {
+    min-height: calc(100vh - 64px);
+    height: 100%;
+    width: 8px;
+  }
+
+  .hordiv {
+    height: 8px;
     width: 100%;
+  }
+
+  .vert, .hor {
+    min-height: calc(100vh - 64px);
+    display: flex;
+  }
+
+  .vert {
+    flex-direction: column;
     height: 100%;
   }
 
-  #input {
-    grid-area: text;
+  .hor {
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
   }
-  #list {
-    grid-area: sources;
-    display: flex;
-    flex-direction: column;
+
+  #graph, #list, #components {
     overflow: auto;
-  }
-
-  #components {
-    grid-area: comps;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow: auto;
-  }
-
-  #graph {
-    overflow: auto;
-  }
-
-  .wrap {
-    position: relative;
-    margin: auto;
-  }
-
-  #graph div svg {
-    position: absolute;
-    top: 0;
-    left: 0;
   }
 
   textarea {
-    width: 100%;
+    width: calc(100% - 5px);
     height: 100%;
   }
 </style>

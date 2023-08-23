@@ -1,8 +1,8 @@
-import { pred, BasicLens, type Cont, BasicLensM, predTriple, invPred, type ContT } from "rdf-lens";
+import { pred, BasicLens, type Cont, BasicLensM, predTriple, invPred } from "rdf-lens";
 import { procLens, type Proc } from "./processor";
 import { RDF } from "@treecg/types";
 import { CONN } from "$lib/acHelpers";
-import type { Term } from "@rdfjs/types";
+import type { Quad, Term } from "@rdfjs/types";
 import type { Sized } from "$lib/graph";
 
 
@@ -30,7 +30,7 @@ function fieldL(): BasicLensM<Cont, Field> {
 }
 
 function channelL(predTerm: Term): BasicLensM<Cont, Channel> {
-  const invReader = new BasicLens<ContT, Channel>(({ id, quads }) => {
+  const invReader = new BasicLens<Cont<Quad>, Channel>(({ id, quads }) => {
     const typed = pred(RDF.terms.type).one().execute({ id: id.object, quads });
     const target = invPred(predTerm).one().execute({ id: id.object, quads });
     if (!target) {
@@ -40,7 +40,7 @@ function channelL(predTerm: Term): BasicLensM<Cont, Channel> {
     return { prop: id.predicate.value, value: target.id.value, type: typed.id.value };
   });
 
-  return predTriple().thenSome(invReader, true)
+  return predTriple().thenAll(invReader)
 }
 
 export function StepLens(): BasicLens<Cont, PipelineStep> {
