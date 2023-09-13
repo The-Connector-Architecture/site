@@ -334,10 +334,9 @@ export class State implements Selectable {
   public children: Writable<Children[]> = writable([]);
   public external: ExternalChildren;
 
-  public readonly query: QueryTarget;
+  public query!: QueryTarget;
 
   constructor() {
-    this.query = new QueryTarget();
 
     this.local = {
       path: "Local",
@@ -368,6 +367,7 @@ export class State implements Selectable {
   }
 
   public init() {
+    this.query = new QueryTarget();
     const sources = this.query.sourceList();
     if (sources.length) {
       for (let source of sources) {
