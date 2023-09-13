@@ -1,8 +1,138 @@
+import { goto } from "$app/navigation";
+import { page } from "$app/stores";
 import { type Cache, filterImports, type QuadString } from "$lib/acHelpers";
 import { authHeaders } from "$lib/state/settings";
 import { safeFetch, safeParse } from "$lib/utilBrowser";
 import type { Quad } from "@rdfjs/types";
 import { get, type Readable, type Writable, writable } from "svelte/store";
+
+const EXTERNAL: string = "External Sources";
+
+function parseDeselected(inp: string): string[] {
+  const deselecteds = inp.split(",");
+  return deselecteds.map(decodeURIComponent);
+}
+
+function parseSource(inp: string): { name: string; deselected: string[] } {
+  const [name, deselected] = inp.split("#", 2);
+
+  return {
+    name: decodeURIComponent(name),
+    deselected: parseDeselected(deselected),
+  };
+}
+
+///
+class QueryTarget {
+  _params: URLSearchParams;
+
+  sources: { name: string; deselected: string[] }[] = [];
+  external: { deselected: string[] } = { deselected: [] };
+
+  constructor() {
+    const query = new URLSearchParams(get(page).url.search);
+
+    const sources = [];
+    const sourcesInp = query.get("sources");
+    if (sourcesInp && sourcesInp.length) {
+      const decoded = decodeURIComponent(sourcesInp);
+      sources.push(...decoded.split("&").map(parseSource));
+    }
+
+    const deselected = [];
+    const externalInp = query.get("external");
+    if (externalInp && externalInp.length) {
+      const decoded = decodeURIComponent(externalInp);
+      deselected.push(...parseDeselected(decoded));
+    }
+
+    this._params = query;
+    this.sources = sources;
+    this.external = { deselected };
+  }
+
+  delete(location: string) {
+    this.sources = this.sources.filter((x) => x.name !== location);
+    this.updateUrl();
+  }
+
+  private params(): URLSearchParams {
+    this._params.delete("external");
+    this._params.delete("sources");
+    if (this.external.deselected.length) {
+      const externalString = this.external.deselected
+        .map(encodeURIComponent)
+        .join(",");
+      console.log("external ", externalString);
+      this._params.set("external", encodeURIComponent(externalString));
+    }
+    if (this.sources.length) {
+      const sourceString = this.sources
+        .map(
+          ({ name, deselected }) =>
+            `${encodeURIComponent(name)}#${deselected
+              .map(encodeURIComponent)
+              .join(",")}`,
+        )
+        .join("&");
+
+      console.log("sources ", sourceString);
+      this._params.set("sources", encodeURIComponent(sourceString));
+    }
+    return this._params;
+  }
+
+  sourceList(): string[] {
+    return this.sources.map((x) => x.name);
+  }
+
+  addSource(source: string) {
+    if (source === EXTERNAL) return;
+    if (!this.sources.some((x) => x.name !== source)) {
+      this.sources.push({ name: source, deselected: [] });
+      this.updateUrl();
+    }
+  }
+
+  isSelected(source: string, file: string): boolean {
+    const target =
+      source == EXTERNAL
+        ? this.external
+        : this.sources.find((x) => x.name === source);
+    if (target) {
+      return !target.deselected.some((x) => x === file);
+    }
+    return true;
+  }
+
+  toggleSelected(source: string, file: string) {
+    const target =
+      source == EXTERNAL
+        ? this.external
+        : this.sources.find((x) => x.name === source);
+
+    if (!target) {
+      this.sources.push({ name: source, deselected: [file] });
+    } else {
+      let wasDeselected = false;
+      target.deselected = target.deselected.filter((x) => {
+        if (x === file) {
+          wasDeselected = true;
+          return false;
+        }
+        return true;
+      });
+
+      if (!wasDeselected) target.deselected.push(file);
+    }
+
+    this.updateUrl();
+  }
+
+  private updateUrl() {
+    goto(`?${this.params().toString()}`);
+  }
+}
 
 export interface Selectable {
   selected(): Readable<number>;
@@ -22,8 +152,7 @@ async function contents(
   repo: string,
   branch = "master",
 ): Promise<Node[]> {
-  const url =
-    `https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=2`;
+  const url = `https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=2`;
   console.log("fetching url ", url);
 
   const resp = await fetch(url, {
@@ -37,15 +166,17 @@ async function turtles(
   user: string,
   repo: string,
   branch = "master",
-): Promise<{
-  path: string;
-  content: string;
-  url: string;
-}[]> {
+): Promise<
+  {
+    path: string;
+    content: string;
+    url: string;
+  }[]
+> {
   let tree: { path: string; type: string; url: string }[];
   try {
     tree = (await contents(user, repo, branch)).filter((x) =>
-      x.path.endsWith("ttl")
+      x.path.endsWith("ttl"),
     );
   } catch (ex: any) {
     tree = [];
@@ -53,8 +184,7 @@ async function turtles(
   const outs = [];
 
   for (let t of tree) {
-    const url =
-      `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${t.path}`;
+    const url = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${t.path}`;
 
     const r = await fetch(url);
     if (r.status < 300 && r.status >= 200) {
@@ -87,6 +217,7 @@ export type Child = {
   path: string;
   content: string;
   enabled: boolean;
+  toggle: () => void;
   key: number;
   url: string;
   hidden: boolean;
@@ -133,15 +264,30 @@ export class Children implements Selectable {
     return this.state.selected();
   }
 
-  protected async addChild({ path, content, url }: {
-    path: string;
-    content: string;
-    url: string;
-  }, hidden = false): Promise<void> {
+  protected async addChild(
+    {
+      path,
+      content,
+      url,
+    }: {
+      path: string;
+      content: string;
+      url: string;
+    },
+    hidden = false,
+  ): Promise<void> {
     const quads = safeParse(content, url);
     this.state.set(url, content, quads);
     this.children.update((x) => {
-      x.push({ path, content, url, enabled: true, key: id_count, hidden });
+      x.push({
+        path,
+        content,
+        url,
+        enabled: this.state.query.isSelected(this.location, path),
+        toggle: () => this.state.query.toggleSelected(this.location, path),
+        key: id_count,
+        hidden,
+      });
       id_count += 1;
       return x;
     });
@@ -166,11 +312,14 @@ export class ExternalChildren extends Children {
     console.log("add external depth", i, location);
 
     const text = await safeFetch(location, {});
-    this.addChild({
-      path: location,
-      content: text,
-      url: location,
-    }, text.length === 0);
+    this.addChild(
+      {
+        path: location,
+        content: text,
+        url: location,
+      },
+      text.length === 0,
+    );
   }
 }
 
@@ -185,13 +334,19 @@ export class State implements Selectable {
   public children: Writable<Children[]> = writable([]);
   public external: ExternalChildren;
 
+  public readonly query: QueryTarget;
+
   constructor() {
+    this.query = new QueryTarget();
+
     this.local = {
       path: "Local",
       content: "",
       enabled: true,
+      toggle: () => {},
       key: 0,
       url: "test.com",
+      hidden: false,
     };
 
     this.store["test.com"] = {
@@ -201,7 +356,7 @@ export class State implements Selectable {
       baseIRI: "test.com",
     };
 
-    this.external = new ExternalChildren("External sources", this);
+    this.external = new ExternalChildren(EXTERNAL, this);
   }
 
   selected() {
@@ -212,19 +367,40 @@ export class State implements Selectable {
     return this.external.add_external(location);
   }
 
+  public init() {
+    const sources = this.query.sourceList();
+    if (sources.length) {
+      for (let source of sources) {
+        console.log("Adding source", source);
+        Children.source(source, this).then((x) => {
+          this.children.update((ar) => {
+            ar.push(x);
+            return ar;
+          });
+        });
+      }
+    } else {
+      this.add("https://github.com/ajuvercr/mumo-pipeline/tree/main");
+    }
+  }
+
   public add(location: string) {
+    this.query.addSource(location);
     Children.source(location, this).then((x) => {
       this.children.update((ar) => {
         ar.push(x);
         return ar;
       });
     });
+
+    console.log("added!");
   }
 
   public delete(location: string) {
     this.children.update((ar) => {
       return ar.filter((x) => x.location !== location);
     });
+    this.query.delete(location);
   }
 
   public select(child: Child) {
@@ -257,9 +433,7 @@ export class State implements Selectable {
     // iew
     const out = [];
     for (let child of get(this.children)) {
-      out.push(
-        ...get(child.children).filter((x) => x.enabled),
-      );
+      out.push(...get(child.children).filter((x) => x.enabled));
     }
     out.push(...get(this.external.children).filter((x) => x.enabled));
     out.push(this.local);

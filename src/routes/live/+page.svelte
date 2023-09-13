@@ -7,10 +7,14 @@
   import { State } from "$lib/helpers/sourceState";
   import { keyAction } from "$lib/utilBrowser";
   import PipelineGraph, { type DataType } from "$lib/components/PipelineGraph.svelte";
+    import { onMount } from "svelte";
 
   export const updateQuads = debounce(_updateQuads, 200);
   const  state = new State();
-  state.add("https://github.com/ajuvercr/mumo-pipeline/tree/main")
+
+  onMount(() =>
+    state.init()
+  );
   const current = state.current;
 
   let procs: Proc[] = [];

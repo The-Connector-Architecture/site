@@ -14,6 +14,7 @@
 
     const toggle = () => {
       child.enabled = !child.enabled;
+      child.toggle();
       dispatch("update");
     }
 </script>
