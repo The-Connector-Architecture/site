@@ -5,27 +5,29 @@
 		<link rel="icon" href="../favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta http-equiv="content-security-policy" content="">
-		<link href="../_app/immutable/assets/_layout.1098640d.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/_layout.53f272a9.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/_layout.90978cdb.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/toc.68383aa0.css" rel="stylesheet">
-		<link rel="modulepreload" href="../_app/immutable/entry/start.1e222a65.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/index.4fabcb1b.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.47888673.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/paths.9c2139d2.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.87789368.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index.32e53c61.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.85718e55.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index.b08b6dbb.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/paths.1feb8e63.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/control.e7f5239e.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/app.42983ae1.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.41c905a7.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/_layout.svelte.45acfe85.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.b725d754.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/Button.c58dda85.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/stores.80b58c54.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.719985c6.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.a4192956.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/_layout.svelte.f558501a.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/utilBrowser.f96b050e.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.e8165e88.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Button.ea3053a5.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.56e51bf7.js">
 		<link rel="modulepreload" href="../_app/immutable/entry/_layout.ts.07c04cf2.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/_layout.025914ab.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-layout.svelte.8317f947.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/Toc.539555b1.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.svelte.fbbece45.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.ts.c5758d5a.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/_page.845d5e6f.js"><title>Connector Architecture</title><!-- HEAD_svelte-1ffb0ko_START --><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!-- HEAD_svelte-1ffb0ko_END -->
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-layout.svelte.e6f99afb.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Toc.2c780fb4.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.svelte.fc2d4f6c.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/docs-_post_-page.ts.7caf3016.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/_page.7255aae8.js"><title>Connector Architecture</title><!-- HEAD_svelte-1ffb0ko_START --><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!-- HEAD_svelte-1ffb0ko_END -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
@@ -33,20 +35,25 @@
 
 
 
-
+<div class="flexy svelte-54n6js">
+  
 
 <header class="mdc-top-app-bar mdc-top-app-bar--fixed" style=""><div class="mdc-top-app-bar__row"><section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"><span class="mdc-top-app-bar__title" style="cursor: pointer;">Connector Architecture</span>
 </section>
-    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" role="toolbar"><button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" role="toolbar"><button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
   <span class="mdc-button__label">Docs</span></button>
-      <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+        <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
   <span class="mdc-button__label">Getting Started</span></button>
-      <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+        <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
   <span class="mdc-button__label">Components</span></button>
+        <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+  <span class="mdc-button__label">Live</span></button>
+        <button class="mdc-button mdc-top-app-bar__action-item" style=""><div class="mdc-button__ripple"></div>
+  <span class="mdc-button__label">Settings</span></button>
 </section></div>
 </header>
 
-<main class=""><div class="main svelte-xq0zsc">
+  <main class=""><div class="main svelte-54n6js">
 
 <div><aside class="mdc-drawer mdc-drawer--dismissible" style="max-width: 100%; width: 480px; position: fixed; max-height: calc(100vh - 64px); overflow-y: auto;"><div class="mdc-drawer__header" style="position: relative;"><h1 class="mdc-drawer__title">Table of Centents</h1>
       <div class="margins" style="transform: translateY(-50%); position: absolute; top: 50%; right: 8px; border-radius: 50%;"><button class="material-icons mdc-icon-button mdc-icon-button--touch mdc-icon-button--display-flex" style=""><div class="mdc-icon-button__ripple"></div>
@@ -167,12 +174,13 @@ end</code><!-- HTML_TAG_END --></pre>
 <pre class="language-shell"><!-- HTML_TAG_START --><code class="language-shell">js-runner pipeline.ttl <span class="token parameter variable">-o</span> processors/*.ttl</code><!-- HTML_TAG_END --></pre>
 <h2 id="test-header"><a aria-hidden="true" tabindex="-1" href="#test-header"><span class="icon icon-link"></span></a>Test header</h2></article></div>
 </div></div></main>
+</div>
 
 
 			
 			<script>
 				{
-					__sveltekit_6ff6k5 = {
+					__sveltekit_lr79a0 = {
 						assets: "/site",
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
@@ -180,14 +188,14 @@ end</code><!-- HTML_TAG_END --></pre>
 
 					const element = document.currentScript.parentElement;
 
-					const data = [null,{"type":"data","data":{posts:[{title:"Welcome",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#welcome-to-the-connector-architecture",children:[{type:"text",value:"Welcome to the connector architecture"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#what-is-the-connector-architecture",children:[{type:"text",value:"What is the connector architecture?"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#small-high-level-example",children:[{type:"text",value:"Small high-level example"}]}]}]}]}]}]}},slug:"1_Home"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#vocabulary-overview",children:[{type:"text",value:"Vocabulary overview"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#processor",children:[{type:"text",value:"Processor"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#channel",children:[{type:"text",value:"Channel"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#connector",children:[{type:"text",value:"Connector"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#runner",children:[{type:"text",value:"Runner"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#pipeline",children:[{type:"text",value:"Pipeline"}]}]}]}]}]}]}},slug:"2_Vocabulary-explained"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-channels",children:[{type:"text",value:"Intro to channels"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-http-channel",children:[{type:"text",value:"Example http-channel"}]}]}]}]}]}]}},slug:"3_Channels"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-processor",children:[{type:"text",value:"Intro to the processor"}]}]}]}]}},slug:"4_Processor"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-runners",children:[{type:"text",value:"Intro to runners"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-js-runner",children:[{type:"text",value:"Example js-runner"}]}]}]}]}]}]}},slug:"5_Runner"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-pipeline",children:[{type:"text",value:"Intro to the pipeline"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#test-header",children:[{type:"text",value:"Test header"}]}]}]}]}]}]}},slug:"6_Pipeline"},{title:"Why is this a title",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#why-is-configure-everything-in-linked-data",children:[{type:"text",value:"Why is configure everything in linked data?"}]}]}]}]}},slug:"7_Why"}]},"uses":{}},null];
+					const data = [null,{"type":"data","data":{posts:[{title:"Welcome",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#welcome-to-the-connector-architecture",children:[{type:"text",value:"Welcome to the connector architecture"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#what-is-the-connector-architecture",children:[{type:"text",value:"What is the connector architecture?"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#small-high-level-example",children:[{type:"text",value:"Small high-level example"}]}]}]}]}]}]}},slug:"1_Home"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#vocabulary-overview",children:[{type:"text",value:"Vocabulary overview"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#processor",children:[{type:"text",value:"Processor"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#channel",children:[{type:"text",value:"Channel"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#connector",children:[{type:"text",value:"Connector"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#runner",children:[{type:"text",value:"Runner"}]}]}]},{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#pipeline",children:[{type:"text",value:"Pipeline"}]}]}]}]}]}]}},slug:"2_Vocabulary-explained"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-channels",children:[{type:"text",value:"Intro to channels"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-http-channel",children:[{type:"text",value:"Example http-channel"}]}]}]}]}]}]}},slug:"3_Channels"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-processor",children:[{type:"text",value:"Intro to the processor"}]}]}]}]}},slug:"4_Processor"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-runners",children:[{type:"text",value:"Intro to runners"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#example-js-runner",children:[{type:"text",value:"Example js-runner"}]}]}]}]}]}]}},slug:"5_Runner"},{toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:true,children:[{type:"listItem",spread:true,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#intro-to-the-pipeline",children:[{type:"text",value:"Intro to the pipeline"}]}]},{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#test-header",children:[{type:"text",value:"Test header"}]}]}]}]}]}]}},slug:"6_Pipeline"},{title:"Why is this a title",toc:{index:null,endIndex:null,map:{type:"list",ordered:false,spread:false,children:[{type:"listItem",spread:false,children:[{type:"paragraph",children:[{type:"link",title:null,url:"#why-is-configure-everything-in-linked-data",children:[{type:"text",value:"Why is configure everything in linked data?"}]}]}]}]}},slug:"7_Why"}]},"uses":{"url":1}},null];
 
 					Promise.all([
-						import("../_app/immutable/entry/start.1e222a65.js"),
-						import("../_app/immutable/entry/app.42983ae1.js")
+						import("../_app/immutable/entry/start.87789368.js"),
+						import("../_app/immutable/entry/app.719985c6.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 2, 7],
+							node_ids: [0, 2, 8],
 							data,
 							form: null,
 							error: null

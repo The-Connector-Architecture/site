@@ -1,0 +1,1 @@
+import{w as o,d as s}from"./index.b08b6dbb.js";const r=typeof window<"u",t=o(r&&localStorage.getItem("PAT")||""),a=s(t,e=>e?{Authorization:`Bearer ${e}`}:{});t.subscribe(e=>{r&&localStorage.setItem("PAT",e)});a.subscribe(e=>console.log("headers",e));export{a,t as p};
