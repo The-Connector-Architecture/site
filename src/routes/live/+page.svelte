@@ -1,235 +1,178 @@
 <script lang="ts">
-  import G6Graph from "$lib/components/G6Graph.svelte";
-  import { load_text } from "$lib/acHelpers";
-  // import { Store } from "n3";
+  import { load } from "$lib/acHelpers";
+  import SourceList from "$lib/components/SourceList.svelte";
+  import type { Proc } from "$lib/pipeline/processor";
+  import Processor from "$lib/components/Processor.svelte";
+  import { generateGraph } from "$lib/graph";
+  import { State } from "$lib/helpers/sourceState";
+  import { keyAction } from "$lib/utilBrowser";
+  import PipelineGraph, { type DataType } from "$lib/components/PipelineGraph.svelte";
+    import { onMount } from "svelte";
 
-  let value = ``;
+  export const updateQuads = debounce(_updateQuads, 200);
+  const  state = new State();
 
-  // async function getData(value: string) {
-  //   if (value) {
-  //     const store = new Store();
-  //     await load_text(value, store);
-  //   }
-  // }
-  //
-  // $: getData(value);
+  onMount(() =>
+    state.init()
+  );
+  const current = state.current;
 
-  const registerFn = async (G6: any) => {
-    G6.registerNode(
-      "flow-rect",
-      {
-        shapeType: "flow-rect",
-        draw(cfg: { label: string; size: [number, number] }, group: any) {
-          console.log(cfg, group);
-          const { label } = cfg;
+  let procs: Proc[] = [];
+  current.subscribe(updateQuads);
 
-          const grey = "#CED4D9";
-          const rectConfig = {
-            width: cfg.size[0],
-            height: cfg.size[1],
-            lineWidth: 1,
-            fontSize: 12,
-            fill: "#fff",
-            radius: 4,
-            stroke: grey,
-            opacity: 1,
-          };
-
-          const nodeOrigin = {
-            // x: -rectConfig.width / 2,
-            // y: -rectConfig.height / 2,
-            x: 0,
-            y: 0,
-          };
-
-          const textConfig = {
-            textAlign: "left",
-            textBaseline: "bottom",
-          };
-
-          const rect = group.addShape("rect", {
-            attrs: {
-              x: nodeOrigin.x,
-              y: nodeOrigin.y,
-              ...rectConfig,
-            },
-          });
-
-          const name = label;
-
-          console.log(nodeOrigin);
-          // label title
-          group.addShape("text", {
-            attrs: {
-              ...textConfig,
-              x: 4 + nodeOrigin.x,
-              y: 16 + nodeOrigin.y,
-              text: name.length,
-              fontSize: 12,
-              opacity: 0.85,
-              fill: "#000",
-              cursor: "pointer",
-            },
-            // must be assigned in G6 3.3 and later versions. it can be any string you want, but should be unique in a custom item type
-            name: "name-shape",
-          });
-
-          return rect;
-        },
-      },
-      "rect"
-    );
+  let data: DataType = {
+    nodes: [],
+    edges: [],
+    width: 0,
+    height: 0,
   };
-  const options = {
-    container: "mountNode",
-    fitView: true,
-    // fitCenter: true,
-    workerEnabled: false,
-    // padding: [50, 50],
-    // defaultLevel: 3,
-    // defaultZoom: 0.8,
-    modes: { default: ["zoom-canvas", "drag-canvas"] },
-    defaultNode: {
-      size: [30, 20],
-      type: "rect",
-      style: {
-        lineWidth: 2,
-        stroke: "#5B8FF9",
-        fill: "#C6E5FF",
-      },
-    },
-    layout: {
-      type: "dagre",
-      rankdir: "LR",
-      align: "UL",
-      controlPoints: true,
-      nodesepFunc: () => 1,
-      ranksepFunc: () => 1,
-    },
-    defaultEdge: {
-      type: "polyline",
-      size: 1,
-      color: "#e2e2e2",
-      style: {
-        endArrow: {
-          path: "M 0,0 L 8,4 L 8,-4 Z",
-          fill: "#e2e2e2",
-        },
-        radius: 620,
-      },
-    },
-  };
-  const data = {
-    nodes: [
-      {
-        id: "0",
-        label: "Test",
-      },
-      {
-        id: "1",
-        label: "1",
-      },
-      {
-        id: "2",
-        label: "2",
-      },
-      {
-        id: "3",
-        label: "3",
-      },
-      {
-        id: "4",
-        label: "4",
-      },
-      {
-        id: "5",
-        label: "5",
-      },
-      {
-        id: "6",
-        label: "6",
-      },
-      {
-        id: "7",
-        label: "7",
-      },
-      {
-        id: "8",
-        label: "8",
-      },
-      {
-        id: "9",
-        label: "9",
-      },
-    ],
-    edges: [
-      {
-        source: "0",
-        target: "1",
-      },
-      {
-        source: "0",
-        target: "2",
-      },
-      {
-        source: "1",
-        target: "4",
-      },
-      {
-        source: "0",
-        target: "3",
-      },
-      {
-        source: "3",
-        target: "4",
-      },
-      {
-        source: "4",
-        target: "5",
-      },
-      {
-        source: "4",
-        target: "6",
-      },
-      {
-        source: "5",
-        target: "7",
-      },
-      {
-        source: "5",
-        target: "8",
-      },
-      {
-        source: "8",
-        target: "9",
-      },
-      {
-        source: "2",
-        target: "9",
-      },
-      {
-        source: "3",
-        target: "9",
-      },
-    ],
-  };
+
+  function debounce(fn: () => any, ms = 300): () => void {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    return function (this: any) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(fn, ms);
+    };
+  }
+
+  async function _updateQuads() {
+    const loaded = new Set<string>();
+    console.log("updating quads");
+    const files = state.files();
+    const quads = [];
+
+    for(let x of files) {
+      if(!x.enabled) continue;
+
+      const new_quads = await load(
+        x.url, loaded, state.store, x => state.add_external(x)
+      );
+
+      quads.push(...new_quads);
+    }
+
+    const [dgraph, p] = generateGraph(quads);
+    procs = p;
+    data = dgraph.calculate();
+  }
+
+  let right: number = 750;
+  let up1: number = 400;
+  let up2: number = 400;
+
+  let moving = {hor: false, up1: false, up2: false};
+
+  let loc = {x: 0, y: 0};
+  let maxWidth = 0;
+  let maxHeight = 0;
+
+  $:console.log("width, height", maxWidth, maxHeight)
+
+  function move(e: MouseEvent) {
+    if(moving.hor) {
+      right += loc.x - e.x;
+    }
+    if(moving.up1) {
+      up1 += loc.y - e.y;
+    }
+    if(moving.up2) {
+      up2 += loc.y - e.y;
+    }
+    loc = {x: e.x, y: e.y};
+  }
 </script>
 
-<main>
-  <h1>Hello Svelte-g6</h1>
-  <G6Graph style="border: black 1px solid" {options} {data} init={registerFn} />
+<main on:mousemove={move} on:mouseup={() => moving = {up1: false, up2: false, hor: false}} bind:clientWidth={maxWidth} bind:clientHeight={maxHeight} >
+  <div class="hor">
+    <div class="vert interactions" style="width: {maxWidth - right - 8}px">
 
-  <textarea class="area" placeholder="Drop in your pipeline config" {value} />
+      <section id="graph" style="height: {maxHeight - up1 - 8}px">
+        <PipelineGraph {data} />
+      </section>
+      <div class="hordiv div" 
+         on:mousedown={() => moving.up1 = true}>
+      </div>
+      <section id="input" style="height: {up1}px;">
+        <textarea
+          class="area"
+          placeholder="Drop in your pipeline config"
+          bind:value={$current}
+        />
+      </section>
+    </div>
+
+      <div class="vertdiv div" 
+         on:mousedown={() => moving.hor = true}>
+      </div>
+
+    <div class="vert lists" style="width: {right}px;">
+      <section id="components" style="height: {maxHeight - up2 - 8}px">
+        <div>
+          {#each procs as proc}
+            <Processor {proc} />
+          {/each}
+        </div>
+      </section>
+
+      <div class="hordiv div" 
+         on:mousedown={() => moving.up2 = true}>
+      </div>
+
+      <section id="list" style="height: {up2}px;">
+        <SourceList on:update={() => updateQuads()} {state} />
+      </section>
+    </div>
+  </div>
 </main>
 
 <style>
   main {
     font-family: sans-serif;
-    text-align: center;
+    min-height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    overflow: hidden;
+  }
+
+
+  .div {
+    background-color: #333;
+    cursor: pointer;
+  }
+
+  .vertdiv {
+    min-height: calc(100vh - 64px);
+    height: 100%;
+    width: 8px;
+  }
+
+  .hordiv {
+    height: 8px;
+    width: 100%;
+  }
+
+  .vert, .hor {
+    min-height: calc(100vh - 64px);
+    display: flex;
+  }
+
+  .vert {
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .hor {
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+  }
+
+  #graph, #list, #components {
+    overflow: auto;
   }
 
   textarea {
-    width: 80%;
-    min-height: 200px;
+    width: calc(100% - 5px);
+    height: 100%;
   }
 </style>
