@@ -59,13 +59,14 @@ class QueryTarget {
   private params(): URLSearchParams {
     this._params.delete("external");
     this._params.delete("sources");
+
     if (this.external.deselected.length) {
       const externalString = this.external.deselected
         .map(encodeURIComponent)
         .join(",");
-      console.log("external ", externalString);
       this._params.set("external", encodeURIComponent(externalString));
     }
+
     if (this.sources.length) {
       const sourceString = this.sources
         .map(
@@ -76,7 +77,6 @@ class QueryTarget {
         )
         .join("&");
 
-      console.log("sources ", sourceString);
       this._params.set("sources", encodeURIComponent(sourceString));
     }
     return this._params;
@@ -88,10 +88,12 @@ class QueryTarget {
 
   addSource(source: string) {
     if (source === EXTERNAL) return;
-    if (!this.sources.some((x) => x.name !== source)) {
-      this.sources.push({ name: source, deselected: [] });
-      this.updateUrl();
+    if (this.sources.some((x) => x.name == source)) {
+      return;
     }
+
+    this.sources.push({ name: source, deselected: [] });
+    this.updateUrl();
   }
 
   isSelected(source: string, file: string): boolean {
@@ -337,7 +339,6 @@ export class State implements Selectable {
   public query!: QueryTarget;
 
   constructor() {
-
     this.local = {
       path: "Local",
       content: "",
